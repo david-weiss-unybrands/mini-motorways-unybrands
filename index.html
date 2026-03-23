@@ -64,9 +64,9 @@ const locations = [
   {id:'tiktok',label:'Tiktok',grains:[],x:265,y:75,color:isDark?'#4a5a30':'#c4ceaf',accent:isDark?'#3a4a22':'#8a9a70',w:45,h:34,dim:true},
   {id:'walmart',label:'Walmart',grains:[],x:325,y:10,color:isDark?'#4a5a30':'#c4ceaf',accent:isDark?'#3a4a22':'#8a9a70',w:52,h:36,dim:true},
   // Forecast (UB Legacy)
-  {id:'forecast',label:'Forecast\n(UB Legacy)',grains:['Channel','Region','ASIN'],x:25,y:470,color:isDark?'#7F77DD':'#AFA9EC',accent:'#534AB7',w:55,h:35},
+  {id:'forecast',label:'Forecast\n(UB Legacy)',grains:['Channel','Region','ASIN'],x:25,y:520,color:isDark?'#7F77DD':'#AFA9EC',accent:'#534AB7',w:55,h:35},
   // Forecast (Redfits)
-  {id:'forecast_rf',label:'Forecast\n(Redfits)',grains:['Channel','Region','MSKU'],x:40,y:270,color:isDark?'#9F77DD':'#CECBF6',accent:'#3C3489',w:55,h:35},
+  {id:'forecast_rf',label:'Forecast\n(Redfits)',grains:['Channel','Region','MSKU'],x:40,y:230,color:isDark?'#9F77DD':'#CECBF6',accent:'#3C3489',w:55,h:35},
   // Forecast_actuals (stacked)
   {id:'forecast_actuals',label:'Forecast_actuals',grains:['ASIN','Country'],x:470,y:450,color:isDark?'#7F77DD':'#C5C1F0',accent:'#534AB7',w:68,h:60,stacked:true},
   // Orders & Returns
@@ -90,14 +90,14 @@ const locations = [
   {id:'erp',label:'ERP Mapping\n(Netsuite)',grains:['USIN','MSKU','FNSKU','Channel','Country'],x:120,y:775,color:isDark?'#BA7517':'#FAC775',accent:'#854F0B',w:55,h:35},
   // Supply chain detail nodes
   {id:'inventory_tradepeg',label:'Inventory\nTradePeg',grains:['Location Code','MSKU'],x:-130,y:160,color:isDark?'#BA7517':'#FAC775',accent:'#854F0B',w:55,h:35},
-  {id:'po_visibility_rf',label:'PO Visibility RF',grains:['MSKU','Region'],x:-130,y:285,color:isDark?'#BA7517':'#FAC775',accent:'#854F0B',w:55,h:35},
+  {id:'po_visibility_rf',label:'PO Visibility RF',grains:['MSKU','Region'],x:-130,y:255,color:isDark?'#BA7517':'#FAC775',accent:'#854F0B',w:55,h:35},
   {id:'days_of_supply',label:'Days of\nSupply',grains:['USIN','Region'],x:-150,y:460,color:isDark?'#BA7517':'#F0D08A',accent:'#854F0B',w:55,h:45,stacked:true},
   {id:'inventory_detail',label:'Inventory\nDetail',grains:['USIN','Region'],x:-300,y:460,color:'#ffffff',accent:isDark?'rgba(255,255,255,0.25)':'rgba(0,0,0,0.15)',w:95,h:78,tableau:true},
   // Flieber Monthly Snapshots
-  {id:'flieber',label:'Flieber Monthly\nSnapshots',grains:['Snapshot Month','Channel','Region','ASIN'],x:100,y:370,color:isDark?'#7F77DD':'#C5C1F0',accent:'#534AB7',w:65,h:50,stacked:true},
+  {id:'flieber',label:'Flieber Monthly\nSnapshots',grains:['Snapshot Month','Channel','Region','ASIN'],x:80,y:395,color:isDark?'#7F77DD':'#C5C1F0',accent:'#534AB7',w:65,h:50,stacked:true},
   // Tableau Reports
   {id:'bm_primary',label:'BM Primary\nreport',grains:['ASIN','Country'],x:820,y:15,color:'#ffffff',accent:isDark?'rgba(255,255,255,0.25)':'rgba(0,0,0,0.15)',w:95,h:78,tableau:true},
-  {id:'fcst_vis',label:'Forecast\nVisibility',grains:['Snapshot Month','ASIN','Country'],x:310,y:355,color:'#ffffff',accent:isDark?'rgba(255,255,255,0.25)':'rgba(0,0,0,0.15)',w:95,h:78,tableau:true},
+  {id:'fcst_vis',label:'Forecast\nVisibility',grains:['Snapshot Month','ASIN','Country'],x:345,y:355,color:'#ffffff',accent:isDark?'rgba(255,255,255,0.25)':'rgba(0,0,0,0.15)',w:95,h:78,tableau:true},
 ];
 
 // --- VILLAGE ROADS (dense, right-side cluster) ---
@@ -143,7 +143,7 @@ locations.forEach(l => nodeMap[l.id] = {cx:l.x+l.w/2, cy:l.y+l.h/2, accent:l.acc
 
 // Override control points for specific roads that need custom curves
 const curveOverrides = {
-  'forecast_rf→forecast_actuals': {cx:420, cy:240},
+  'forecast_rf→forecast_actuals': {cx:420, cy:220},
 };
 function getRoadCurve(a,b){
   const src=nodeMap[a],dst=nodeMap[b];
@@ -686,18 +686,18 @@ function drawRiver(){
 
   // Canal: straight line from Forecast UB Legacy → Forecast Redfits → DTC Island
   const cw=12; // canal half-width
-  // Forecast UB Legacy center ~(52,487), Forecast Redfits center ~(67,287), Island shore ~(280,165)
+  // Forecast UB Legacy center ~(52,537), Forecast Redfits center ~(67,247), Island shore ~(280,165)
   // Two straight segments with perpendicular offsets for width
   const segs=[
-    {x1:52, y1:495, x2:67, y2:280},  // UB Legacy → Redfits
+    {x1:52, y1:545, x2:67, y2:240},  // UB Legacy → Redfits
     {x2:280, y2:165}                   // Redfits → Island (continuation)
   ];
   // Segment 1: UB Legacy to Redfits
-  const s1={x1:52,y1:495,x2:67,y2:280};
+  const s1={x1:52,y1:545,x2:67,y2:240};
   const a1=Math.atan2(s1.y2-s1.y1,s1.x2-s1.x1);
   const px1=Math.cos(a1+Math.PI/2)*cw, py1=Math.sin(a1+Math.PI/2)*cw;
   // Segment 2: Redfits to Island
-  const s2={x1:67,y1:280,x2:280,y2:165};
+  const s2={x1:67,y1:240,x2:280,y2:165};
   const a2=Math.atan2(s2.y2-s2.y1,s2.x2-s2.x1);
   const px2=Math.cos(a2+Math.PI/2)*cw, py2=Math.sin(a2+Math.PI/2)*cw;
 
@@ -1164,8 +1164,8 @@ function drawAMZGate(road,t_pos){
 const boatChannels=['SPF','Tiktok','WMT'];
 
 // Canal waypoints matching the drawn canal segments
-const canalFull=[{x:52,y:495},{x:67,y:280},{x:280,y:165}]; // UB Legacy → Redfits bend → Island
-const canalFromRF=[{x:67,y:280},{x:280,y:165}]; // Redfits → Island
+const canalFull=[{x:52,y:545},{x:67,y:240},{x:280,y:165}]; // UB Legacy → Redfits bend → Island
+const canalFromRF=[{x:67,y:240},{x:280,y:165}]; // Redfits → Island
 
 function getCanalLen(pts){let d=0;for(let i=1;i<pts.length;i++){const dx=pts[i].x-pts[i-1].x,dy=pts[i].y-pts[i-1].y;d+=Math.sqrt(dx*dx+dy*dy);}return d;}
 function getCanalPos(pts,t){
@@ -1274,7 +1274,7 @@ rowboats.push(new Rowboat(0.33,'forecast_rf'));
 rowboats.push(new Rowboat(0.66,'forecast'));
 
 // Tableau Data Source hub position (between flieber/FA and the dashboard)
-const tabDSx = 310, tabDSy = 430;
+const tabDSx = 330, tabDSy = 450;
 // Virtual node so roads can connect to it
 nodeMap['tab_ds_fcst'] = {cx:tabDSx, cy:tabDSy, accent:'#4E79A7'};
 
