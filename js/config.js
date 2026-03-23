@@ -100,6 +100,52 @@ export const locations = [
   {id:'fcst_vis',label:'Forecast\nVisibility',grains:['Snapshot Month','ASIN','Country'],x:310,y:355,color:'#ffffff',accent:isDark?'rgba(255,255,255,0.25)':'rgba(0,0,0,0.15)',w:95,h:78,tableau:true},
 ];
 
+// === Sign-Aware Spacing ===
+const MIN_GAP = 15;
+
+function getNodeBounds(l){
+  const cx=l.x+l.w/2;
+  const lines=l.label.split('\n');
+  const grainH=l.grains.length>0?20:0;
+  // Measure sign width using canvas context
+  ctx.font='600 10px sans-serif';
+  const maxLineW=Math.max(...lines.map(ln=>ctx.measureText(ln).width));
+  ctx.font='600 9px sans-serif';
+  const pg=4;
+  const pw2=l.grains.map(g=>ctx.measureText(g).width+10);
+  const prw=pw2.length>0?(pw2.reduce((a,b)=>a+b,0)+(l.grains.length-1)*pg):0;
+  const pw=Math.max(maxLineW+12,prw+12);
+  const topY=l.y;
+  const bottomY=l.y+l.h+15+lines.length*14+4+grainH;
+  const leftX=Math.min(l.x,cx-pw/2);
+  const rightX=Math.max(l.x+l.w,cx+pw/2);
+  return {topY,bottomY,leftX,rightX,node:l};
+}
+
+function resolveOverlaps(){
+  const bounds=locations.map(getNodeBounds);
+  for(let pass=0;pass<5;pass++){
+    let changed=false;
+    bounds.sort((a,b)=>a.topY-b.topY);
+    for(let i=0;i<bounds.length;i++){
+      for(let j=i+1;j<bounds.length;j++){
+        const a=bounds[i],b=bounds[j];
+        if(a.rightX<=b.leftX||b.rightX<=a.leftX) continue;
+        const overlap=(a.bottomY+MIN_GAP)-b.topY;
+        if(overlap>0){
+          const shift=overlap/2;
+          a.node.y-=shift; b.node.y+=shift;
+          a.topY-=shift; a.bottomY-=shift;
+          b.topY+=shift; b.bottomY+=shift;
+          changed=true;
+        }
+      }
+    }
+    if(!changed) break;
+  }
+}
+resolveOverlaps();
+
 // === Routes ===
 export const villageRoads = [
   ['ads','sales'],['bsr','rgm'],['traffic','rgm'],
