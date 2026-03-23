@@ -160,10 +160,17 @@ function drawIsland(){
   ctx.fillRect(7,-1,4,2);
   ctx.restore();
 
-  // Zone label
-  ctx.font='600 12px sans-serif';ctx.fillStyle=isDark?'rgba(200,180,120,0.5)':'rgba(120,90,30,0.4)';
-  ctx.textAlign='center';ctx.textBaseline='middle';
-  ctx.fillText('DTC Island',cx,cy-2);
+  // DTC Sales Island sign
+  const dtcSignX=cx,dtcSignY=cy+12;
+  ctx.fillStyle=isDark?'#6B5B3A':'#8B7355';
+  ctx.fillRect(dtcSignX-1,dtcSignY-2,2,18);
+  ctx.fillStyle=isDark?'#4A3B1F':'#D4B876';
+  ctx.beginPath();ctx.roundRect(dtcSignX-52,dtcSignY-18,104,20,3);ctx.fill();
+  ctx.strokeStyle=isDark?'#6B5B3A':'#8B7355';ctx.lineWidth=1;
+  ctx.beginPath();ctx.roundRect(dtcSignX-52,dtcSignY-18,104,20,3);ctx.stroke();
+  ctx.fillStyle=isDark?'#C4A86A':'#6B5030';
+  ctx.font='bold 9px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('DTC Sales Island',dtcSignX,dtcSignY-8);
 
   ctx.restore();
 }
