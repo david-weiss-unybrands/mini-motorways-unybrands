@@ -1,5 +1,5 @@
 import { ctx, frameCount, bg, W, H, locations, cleanRoutes, r_f_fa, r_rf_fa, r_pov_fa, r_i_pov, r_s_pov, r_s_fa, r_s_rgm, villageRoads, tabDSx, tabDSy, pillColors, ub_b1_entry, ub_b1_exit, rf_b1_entry, rf_b1_exit, rf_b2_entry, rf_b2_exit, sfa_b1_entry, sfa_b1_exit, srgm_b1_entry, srgm_b1_exit, sp_compact_entry, sp_compact_exit, sp_merge, r_f_flieber } from './config.js';
-import { drawRoad, drawTableauRoad, drawMergeLane, drawBuilding, drawSign, drawBoothAt, drawAMZGate, drawTableauDataSource } from './draw.js';
+import { drawRoad, drawTableauRoad, drawMergeLane, drawBuilding, drawSign, drawBoothAt, drawAMZGate, drawTableauDataSource, drawLegend } from './draw.js';
 import { drawRiver, drawZones } from './scenery.js';
 import { splitCars, ubBoothCars, rfBoothCars, salesFABoothCars, salesRGMBoothCars, sidecarCars, salesPOVCars, cars, rowboats } from './vehicles.js';
 
@@ -48,6 +48,7 @@ function frame(){
   rowboats.forEach(c=>{c.update();c.draw();});
   // Buildings & signs
   locations.forEach(l=>{drawBuilding(l);drawSign(l);});
+  drawLegend();
   frameCount.value++;
   requestAnimationFrame(frame);
 }
