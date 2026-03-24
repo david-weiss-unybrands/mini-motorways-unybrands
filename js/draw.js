@@ -348,3 +348,25 @@ export function drawTableauDataSource(dsX, dsY){
   ctx.fillStyle=isDark?'rgba(160,203,232,0.6)':'rgba(78,121,167,0.5)';
   ctx.fillText('Tableau DS',dsX,dsY+r+7);
 }
+
+export function drawLegend(){
+  const x=-330, y=14;
+  const rowH=18, swatchW=14, swatchH=12, pad=10;
+  const items=[
+    {color:'#85B7EB',accent:'#185FA5',label:'Brand Management'},
+    {color:'#AFA9EC',accent:'#534AB7',label:'Demand Planning'},
+    {color:'#FAC775',accent:'#8B6914',label:'Supply Chain'},
+  ];
+  const cardW=140, cardH=pad+items.length*rowH+4;
+  ctx.fillStyle=signBg;
+  ctx.beginPath();ctx.roundRect(x-pad,y-pad+2,cardW,cardH,6);ctx.fill();
+  ctx.strokeStyle=signBorder;ctx.lineWidth=0.8;
+  ctx.beginPath();ctx.roundRect(x-pad,y-pad+2,cardW,cardH,6);ctx.stroke();
+  ctx.font='10px sans-serif';ctx.textAlign='left';ctx.textBaseline='middle';
+  items.forEach((item,i)=>{
+    const ry=y+i*rowH;
+    ctx.fillStyle=item.color;ctx.fillRect(x,ry,swatchW,swatchH);
+    ctx.strokeStyle=item.accent;ctx.lineWidth=0.8;ctx.strokeRect(x,ry,swatchW,swatchH);
+    ctx.fillStyle=textMain;ctx.fillText(item.label,x+swatchW+6,ry+swatchH/2);
+  });
+}

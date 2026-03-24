@@ -1,4 +1,4 @@
-import { ctx, frameCount, isDark, pillColors, nodeMap, splitPoint, ub_b1_entry, ub_b1_exit, rf_b1_entry, rf_b1_exit, rf_b2_entry, rf_b2_exit, sfa_b1_entry, sfa_b1_exit, sp_compact_entry, sp_compact_exit, sp_merge, mergePoint, feederLeadUp, countries, r_f_fa, r_rf_fa, r_s_fa, r_i_pov, r_s_pov, r_pov_fa, villageRoads, cleanRoutes, routeGrains, boatChannels, canalFull, canalFromRF } from './config.js';
+import { ctx, frameCount, isDark, pillColors, nodeMap, splitPoint, ub_b1_entry, ub_b1_exit, rf_b1_entry, rf_b1_exit, rf_b2_entry, rf_b2_exit, sfa_b1_entry, sfa_b1_exit, srgm_b1_entry, srgm_b1_exit, sp_compact_entry, sp_compact_exit, sp_merge, mergePoint, feederLeadUp, countries, r_f_fa, r_rf_fa, r_s_fa, r_s_rgm, r_i_pov, r_s_pov, r_pov_fa, villageRoads, cleanRoutes, routeGrains, boatChannels, canalFull, canalFromRF } from './config.js';
 import { getRoadCurve, getPosAngle, getMergeXYForRoad, getCanalLen, getCanalPos } from './math.js';
 import { drawDualBus, drawCountrySedans, drawSparkles, drawMiniDual } from './draw.js';
 
@@ -120,6 +120,28 @@ class SalesFABoothCar{
 
 export const salesFABoothCars=[];
 for(let i=0;i<3;i++) salesFABoothCars.push(new SalesFABoothCar(r_s_fa[0], i*0.33));
+
+// === SalesRGMBoothCar ===
+class SalesRGMBoothCar{
+  constructor(road,offset){
+    this.road=road;this.progress=offset;this.speed=0.0012+Math.random()*0.0005;
+  }
+  update(){this.progress+=this.speed;if(this.progress>1)this.progress=0;}
+  draw(){
+    const t=this.progress;
+    const p=getPosAngle(this.road,t);
+    if(t<srgm_b1_entry){
+      drawDualBus(p.x,p.y,p.angle,'SKU','Country');
+    } else if(t<srgm_b1_exit){
+      drawSparkles(p.x,p.y,(t-srgm_b1_entry)/(srgm_b1_exit-srgm_b1_entry),pillColors.SKU.text,pillColors.ASIN.text);
+    } else {
+      drawMiniDual(p.x,p.y,p.angle,'ASIN','Country','Country');
+    }
+  }
+}
+
+export const salesRGMBoothCars=[];
+for(let i=0;i<3;i++) salesRGMBoothCars.push(new SalesRGMBoothCar(r_s_rgm[0], i*0.33));
 
 // === SidecarCar ===
 class SidecarCar{

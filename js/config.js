@@ -175,7 +175,7 @@ export const r_dos_id = [['days_of_supply','inventory_detail']];
 
 export const tableauRoutes = [['flieber','fcst_vis'],['forecast_actuals','fcst_vis']];
 
-export const cleanRoutes = [...r_s_rgm,...r_f_pov,...r_ord_s,...r_ret_s,...r_rgm_bm,...r_f_flieber,...r_rf_flieber,...r_it_povrf,...r_rf_povrf,...r_pov_dos,...r_f_dos,...r_povrf_dos,...r_rf_dos];
+export const cleanRoutes = [...r_f_pov,...r_ord_s,...r_ret_s,...r_rgm_bm,...r_f_flieber,...r_rf_flieber,...r_it_povrf,...r_rf_povrf,...r_pov_dos,...r_f_dos,...r_povrf_dos,...r_rf_dos];
 
 // === Node Map ===
 export const nodeMap = {};
@@ -202,6 +202,7 @@ export const splitPoint = 0.45;
 export const ub_b1_entry = 0.35, ub_b1_exit = 0.50;
 export const rf_b1_entry = 0.18, rf_b1_exit = 0.30, rf_b2_entry = 0.50, rf_b2_exit = 0.62;
 export const sfa_b1_entry = 0.35, sfa_b1_exit = 0.50;
+export const srgm_b1_entry = 0.35, srgm_b1_exit = 0.50;
 export const sp_compact_entry = 0.18, sp_compact_exit = 0.30;
 export const sp_merge = 0.50;
 export const mergePoint = 0.4;
@@ -210,7 +211,7 @@ export const boothW = 20, boothH = 16;
 
 // === Route Grains ===
 export const routeGrains = {
-  'sales,rgm':['ASIN','Country'],
+  'sales,rgm':['SKU','Country'],
   'forecast,pov':['ASIN','Region'],
   'orders,sales':['ASIN','Country'],
   'returns,sales':['ASIN','Country'],
