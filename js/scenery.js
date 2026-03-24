@@ -181,7 +181,6 @@ export function drawZones(){
   // Commercial Amazon Data zone
   ctx.fillStyle=cdtZoneBg;ctx.strokeStyle=cdtZoneBorder;ctx.lineWidth=1.5;ctx.setLineDash([8,6]);
   ctx.beginPath();ctx.roundRect(573,129,490,655,16);ctx.fill();ctx.stroke();ctx.setLineDash([]);
-  ctx.font='600 13px sans-serif';ctx.fillStyle=cdtZoneLabel;ctx.textAlign='right';ctx.fillText('Commercial Amazon Data Town',1044,147);
 
   // Amazon Only sign
   const asx=583, asy=137, asw=72, ash=22, asr=4;
