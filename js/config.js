@@ -13,8 +13,8 @@ export const frameCount = { value: 0 };
 
 // === Theme Colors ===
 export const isDark = false;
-export const bg = isDark ? '#1a1a1a' : '#f0ece4';
-export const roadColor = isDark ? '#3a3a3a' : '#d5d0c4';
+export const bg = isDark ? '#1a1a1a' : '#f8f8f8';
+export const roadColor = isDark ? '#555' : '#b0b0b0';
 export const roadLine = isDark ? '#555' : '#c0baa8';
 export const textMain = isDark ? '#e8e8e8' : '#2c2c2a';
 export const signBg = isDark ? 'rgba(30,30,30,0.92)' : 'rgba(255,255,255,0.95)';
