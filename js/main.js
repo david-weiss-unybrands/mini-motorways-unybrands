@@ -3,12 +3,13 @@ import { nodes, edges, transforms, categories, pillColors } from './config.js';
 // Build Cytoscape elements — data table nodes
 const cyNodes = nodes.map(n => {
   const cat = categories[n.cat];
-  // Grains as a lighter secondary line
+  // Full label for sizing (rendered invisible — HTML overlay handles display)
   const grainStr = n.grains.length > 0 ? '\n' + n.grains.join('  ') : '';
   return {
     data: {
       id: n.id,
       label: n.label.replace(/\n/g, '\n'),
+      grains: n.grains,
       fullLabel: n.label.replace(/\n/g, '\n') + grainStr,
       cat: n.cat,
       accent: cat.accent,
@@ -45,7 +46,7 @@ const cy = cytoscape({
   elements: [...cyNodes, ...cyTransforms, ...cyEdges],
   layout: { name: 'preset' },
   style: [
-    // --- Default node style: white card with colored left accent ---
+    // --- Default node style ---
     {
       selector: 'node',
       style: {
@@ -62,7 +63,7 @@ const cy = cytoscape({
         'font-size': '10px',
         'font-weight': 400,
         'font-family': '-apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", sans-serif',
-        'color': '#374151',
+        'color': 'transparent',  // hidden — HTML overlay handles rendering
         'text-max-width': '120px',
         'line-height': 1.5,
         'corner-radius': 8,
@@ -72,19 +73,15 @@ const cy = cytoscape({
         'shadow-offset-y': 4,
         'shadow-color': 'rgba(0, 0, 0, 0.18)',
         'shadow-opacity': 1,
-        // Colored left accent stripe via border
         'border-width': 1,
         'border-color': '#e5e7eb',
         'border-opacity': 1,
-        // Overlay colored indicator
         'underlay-color': 'data(accent)',
         'underlay-padding': 0,
         'underlay-opacity': 0,
       },
     },
-    // --- Category accent: thin left-colored border ---
-    // Since Cytoscape can't do left-only borders, use a thin
-    // bottom underlay stripe effect
+    // --- Category accent border ---
     {
       selector: 'node[!isTransform]',
       style: {
@@ -105,7 +102,7 @@ const cy = cytoscape({
         'border-style': 'dashed',
         'font-size': '7px',
         'font-weight': 500,
-        'color': '#6b7280',
+        'color': '#6b7280',  // transforms keep native label (small, simple)
         'text-max-width': '70px',
         'corner-radius': 6,
         'shadow-blur': 0,
@@ -153,7 +150,6 @@ const cy = cytoscape({
       },
     },
   ],
-  // Interaction
   userZoomingEnabled: true,
   userPanningEnabled: true,
   boxSelectionEnabled: false,
@@ -162,7 +158,26 @@ const cy = cytoscape({
   maxZoom: 3,
 });
 
-// Fit to view with padding
+// HTML label overlays for rich typography
+cy.nodeHtmlLabel([
+  {
+    query: 'node[!isTransform]',
+    halign: 'center',
+    valign: 'center',
+    cssClass: 'node-label',
+    tpl: data => {
+      if (data.dim) return '';  // dimmed nodes keep native label
+      const lines = data.label.split('\n');
+      const name = lines.map(l => `<div>${l}</div>`).join('');
+      const grains = data.grains && data.grains.length > 0
+        ? `<div class="grains">${data.grains.join('<span class="sep"> · </span>')}</div>`
+        : '';
+      return `<div class="node-html">${name}${grains}</div>`;
+    },
+  },
+]);
+
+// Fit to view
 cy.fit(undefined, 40);
 
 // Hover effects
@@ -179,10 +194,10 @@ cy.on('mouseover', 'node[!isTransform]', evt => {
     'shadow-offset-y': 4,
   });
   node.connectedEdges().style({
-    'width': 1.5,
+    'width': 3,
     'line-color': accent,
     'target-arrow-color': accent,
-    'opacity': 0.7,
+    'opacity': 0.85,
   });
 });
 
@@ -193,11 +208,11 @@ cy.on('mouseout', 'node[!isTransform]', evt => {
   node.style({
     'border-opacity': 0.5,
     'border-width': '1 1 1 3',
-    'shadow-blur': isStacked ? 0 : 12,
-    'shadow-color': isStacked ? accent : 'rgba(0, 0, 0, 0.06)',
+    'shadow-blur': isStacked ? 0 : 15,
+    'shadow-color': isStacked ? accent : 'rgba(0, 0, 0, 0.18)',
     'shadow-opacity': isStacked ? 0.15 : 1,
     'shadow-offset-x': isStacked ? 3 : 0,
-    'shadow-offset-y': isStacked ? -3 : 2,
+    'shadow-offset-y': isStacked ? -3 : 4,
   });
   node.connectedEdges().style({
     'width': 2.5,

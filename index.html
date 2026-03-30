@@ -7,15 +7,39 @@
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { background: #f4f5f7; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif; }
-  #cy {
-    width: 100%;
-    height: 100vh;
+  #cy { width: 100%; height: 100vh; }
+
+  /* HTML label typography */
+  .node-html {
+    text-align: center;
+    pointer-events: none;
+    line-height: 1.4;
+    white-space: nowrap;
+  }
+  .node-html div {
+    font-size: 11px;
+    font-weight: 500;
+    color: #1f2937;
+    letter-spacing: -0.01em;
+  }
+  .node-html .grains {
+    margin-top: 4px;
+    font-size: 8.5px;
+    font-weight: 400;
+    font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+    color: #9ca3af;
+    letter-spacing: 0.02em;
+  }
+  .node-html .grains .sep {
+    color: #d1d5db;
+    margin: 0 1px;
   }
 </style>
 </head>
 <body>
 <div id="cy"></div>
 <script src="https://unpkg.com/cytoscape@3.30.4/dist/cytoscape.min.js"></script>
+<script src="https://unpkg.com/cytoscape-node-html-label@1.2.2/dist/cytoscape-node-html-label.min.js"></script>
 <script type="module" src="js/main.js"></script>
 </body>
 </html>
