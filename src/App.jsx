@@ -31,16 +31,22 @@ const defaultEdgeOptions = {
 export default function App() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-  const [selectedGrain, setSelectedGrain] = useState(null);
+  const [selectedGrains, setSelectedGrains] = useState([]);
+
+  const toggleGrain = useCallback((g) => {
+    setSelectedGrains(prev =>
+      prev.includes(g) ? prev.filter(x => x !== g) : [...prev, g]
+    );
+  }, []);
 
   const filteredNodes = useMemo(() => {
-    if (!selectedGrain) return nodes;
+    if (selectedGrains.length === 0) return nodes;
     return nodes.map(n => {
       if (n.type === 'transformNode') return { ...n, data: { ...n.data, filterDim: true } };
-      const hasGrain = n.data.grains?.includes(selectedGrain);
+      const hasGrain = selectedGrains.every(g => n.data.grains?.includes(g));
       return { ...n, data: { ...n.data, filterHighlight: hasGrain, filterDim: !hasGrain } };
     });
-  }, [nodes, selectedGrain]);
+  }, [nodes, selectedGrains]);
 
   return (
     <div style={{ width: '100vw', height: '100vh', background: '#f4f5f7' }}>
@@ -49,14 +55,14 @@ export default function App() {
         {allGrains.map(g => (
           <button
             key={g}
-            className={`grain-pill ${selectedGrain === g ? 'active' : ''}`}
-            onClick={() => setSelectedGrain(selectedGrain === g ? null : g)}
+            className={`grain-pill ${selectedGrains.includes(g) ? 'active' : ''}`}
+            onClick={() => toggleGrain(g)}
           >
             {g}
           </button>
         ))}
-        {selectedGrain && (
-          <button className="grain-pill clear" onClick={() => setSelectedGrain(null)}>
+        {selectedGrains.length > 0 && (
+          <button className="grain-pill clear" onClick={() => setSelectedGrains([])}>
             Clear
           </button>
         )}
