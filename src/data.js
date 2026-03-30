@@ -46,10 +46,10 @@ const rawNodes = [
 const rawTransforms = [
   {id:'t_f_fa',    label:'Region → Country',              x:564, y:462},
   {id:'t_rf_fa',   label:'MSKU → ASIN, Region → Country', x:560, y:340},
-  {id:'t_s_pov',   label:'MSKU → USIN, Country → Region', x:828, y:566},
-  {id:'t_s_fa',    label:'MSKU → ASIN',                   x:915, y:507},
-  {id:'t_s_rgm',   label:'MSKU → ASIN',                   x:1064,y:431},
-  {id:'t_f_pov',   label:'ASIN → USIN',                   x:352, y:542},
+  {id:'t_s_pov',   label:'JOIN erp_mapping (ASIN→USIN), AGG Country→Region', x:828, y:566},
+  {id:'t_s_fa',    label:'AGG drop MSKU',                 x:915, y:507},
+  {id:'t_s_rgm',   label:'AGG drop MSKU',                 x:1064,y:431},
+  {id:'t_f_pov',   label:'JOIN erp_mapping (ASIN→USIN), AGG Country→Region', x:352, y:542},
 ];
 
 // Scale positions to give cards breathing room
