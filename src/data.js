@@ -223,7 +223,7 @@ const rawInitialEdges = rawEdges.map(([src, dst, style], i) => {
 
 // Post-process: detect overlapping edge corridors and assign offsets
 function assignOffsets(edges) {
-  const SPACING = 14;
+  const SPACING = 24;
 
   // Group edges by corridor signature
   const corridors = {};
