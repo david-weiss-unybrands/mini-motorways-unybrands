@@ -94,9 +94,32 @@ const rawEdges = [
   ['flieber','fcst_vis'], ['forecast_actuals','fcst_vis'],
 ];
 
+// Build a position lookup for computing best handle pairs
+const posMap = {};
+rawNodes.forEach(n => { posMap[n.id] = { x: n.x, y: n.y }; });
+rawTransforms.forEach(t => { posMap[t.id] = { x: t.x, y: t.y }; });
+
+function bestHandles(srcId, dstId) {
+  const s = posMap[srcId], d = posMap[dstId];
+  if (!s || !d) return {};
+  const dx = d.x - s.x;
+  const dy = d.y - s.y;
+  // Pick handle based on dominant direction
+  if (Math.abs(dx) > Math.abs(dy)) {
+    // Horizontal dominant
+    if (dx > 0) return { sourceHandle: 's-right', targetHandle: 't-left' };
+    return { sourceHandle: 's-left', targetHandle: 't-right' };
+  } else {
+    // Vertical dominant
+    if (dy > 0) return { sourceHandle: 's-bottom', targetHandle: 't-top' };
+    return { sourceHandle: 's-top', targetHandle: 't-bottom' };
+  }
+}
+
 export const initialEdges = rawEdges.map(([src, dst], i) => ({
   id: `e${i}`,
   source: src,
   target: dst,
-  type: 'default',
+  type: 'straight',
+  ...bestHandles(src, dst),
 }));
