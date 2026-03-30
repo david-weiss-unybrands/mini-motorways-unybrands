@@ -5,11 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Network Graph</title>
 <style>
-  body { margin: 0; background: #f8f8f8; display: flex; justify-content: center; padding: 0.5rem 0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #f8f9fb; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; padding: 1rem; }
+  canvas { width: 100%; max-width: 1450px; border-radius: 8px; cursor: default; }
 </style>
 </head>
 <body>
-<canvas id="mm" style="width: 100%; max-width: 800px; border-radius: 8px; cursor: default;"></canvas>
+<canvas id="mm"></canvas>
 <script type="module" src="js/main.js"></script>
 </body>
 </html>
