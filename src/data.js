@@ -119,37 +119,107 @@ const posMap = {};
 rawNodes.forEach(n => { posMap[n.id] = spread(n.x, n.y); });
 rawTransforms.forEach(t => { posMap[t.id] = spread(t.x, t.y); });
 
-function bestHandles(srcId, dstId) {
+// Rank handle options by direction preference
+function rankedHandles(dx, dy) {
+  const absX = Math.abs(dx);
+  const absY = Math.abs(dy);
+  const options = [];
+
+  // Primary: dominant direction
+  if (absX > absY) {
+    if (dx > 0) {
+      options.push({ s: 's-right', t: 't-left' });
+      options.push(dy > 0 ? { s: 's-bottom', t: 't-top' } : { s: 's-top', t: 't-bottom' });
+      options.push(dy > 0 ? { s: 's-top', t: 't-bottom' } : { s: 's-bottom', t: 't-top' });
+      options.push({ s: 's-left', t: 't-right' });
+    } else {
+      options.push({ s: 's-left', t: 't-right' });
+      options.push(dy > 0 ? { s: 's-bottom', t: 't-top' } : { s: 's-top', t: 't-bottom' });
+      options.push(dy > 0 ? { s: 's-top', t: 't-bottom' } : { s: 's-bottom', t: 't-top' });
+      options.push({ s: 's-right', t: 't-left' });
+    }
+  } else {
+    if (dy > 0) {
+      options.push({ s: 's-bottom', t: 't-top' });
+      options.push(dx > 0 ? { s: 's-right', t: 't-left' } : { s: 's-left', t: 't-right' });
+      options.push(dx > 0 ? { s: 's-left', t: 't-right' } : { s: 's-right', t: 't-left' });
+      options.push({ s: 's-top', t: 't-bottom' });
+    } else {
+      options.push({ s: 's-top', t: 't-bottom' });
+      options.push(dx > 0 ? { s: 's-right', t: 't-left' } : { s: 's-left', t: 't-right' });
+      options.push(dx > 0 ? { s: 's-left', t: 't-right' } : { s: 's-right', t: 't-left' });
+      options.push({ s: 's-bottom', t: 't-top' });
+    }
+  }
+  return options;
+}
+
+// Track handle usage per node: only one edge per side unless all 4 are taken
+const handleUsage = {}; // nodeId -> { 'top': count, 'bottom': count, ... }
+function getUsage(nodeId) {
+  if (!handleUsage[nodeId]) handleUsage[nodeId] = { top: 0, bottom: 0, left: 0, right: 0 };
+  return handleUsage[nodeId];
+}
+function sideOf(handle) {
+  return handle.split('-')[1]; // 's-right' -> 'right', 't-top' -> 'top'
+}
+function canUseSide(nodeId, side) {
+  const usage = getUsage(nodeId);
+  if (usage[side] === 0) return true;
+  // All 4 sides full — allow doubling up
+  return usage.top > 0 && usage.bottom > 0 && usage.left > 0 && usage.right > 0;
+}
+function markUsage(nodeId, side) {
+  getUsage(nodeId)[side]++;
+}
+
+function assignHandles(srcId, dstId) {
   const s = posMap[srcId], d = posMap[dstId];
   if (!s || !d) return {};
   const dx = d.x - s.x;
   const dy = d.y - s.y;
-  // Pick handle based on dominant direction
-  if (Math.abs(dx) > Math.abs(dy)) {
-    // Horizontal dominant
-    if (dx > 0) return { sourceHandle: 's-right', targetHandle: 't-left' };
-    return { sourceHandle: 's-left', targetHandle: 't-right' };
-  } else {
-    // Vertical dominant
-    if (dy > 0) return { sourceHandle: 's-bottom', targetHandle: 't-top' };
-    return { sourceHandle: 's-top', targetHandle: 't-bottom' };
+  const options = rankedHandles(dx, dy);
+
+  for (const opt of options) {
+    const sSide = sideOf(opt.s);
+    const tSide = sideOf(opt.t);
+    if (canUseSide(srcId, sSide) && canUseSide(dstId, tSide)) {
+      markUsage(srcId, sSide);
+      markUsage(dstId, tSide);
+      return { sourceHandle: opt.s, targetHandle: opt.t };
+    }
   }
+  // Fallback: use best option regardless (all sides overloaded)
+  const best = options[0];
+  markUsage(srcId, sideOf(best.s));
+  markUsage(dstId, sideOf(best.t));
+  return { sourceHandle: best.s, targetHandle: best.t };
 }
 
-const rawInitialEdges = rawEdges.map(([src, dst, style], i) => ({
-  id: `e${i}`,
-  source: src,
-  target: dst,
-  type: 'offsetEdge',
-  ...bestHandles(src, dst),
-  ...(style === 'lookup' ? {
-    sourceHandle: 's-left',
-    targetHandle: 't-left',
-    style: { stroke: '#d97706', strokeWidth: 1.5, strokeDasharray: '4 3' },
-    markerEnd: undefined,
-    data: { lookup: true },
-  } : {}),
-}));
+const rawInitialEdges = rawEdges.map(([src, dst, style], i) => {
+  const isLookup = style === 'lookup';
+  let handles;
+  if (isLookup) {
+    // Lookup edges: prefer left-left but respect the constraint
+    handles = { sourceHandle: 's-left', targetHandle: 't-left' };
+    markUsage(src, 'left');
+    markUsage(dst, 'left');
+  } else {
+    handles = assignHandles(src, dst);
+  }
+  return {
+    id: `e${i}`,
+    source: src,
+    target: dst,
+    type: 'offsetEdge',
+    ...handles,
+    ...(isLookup ? {
+      style: { stroke: '#d97706', strokeWidth: 1.5, strokeDasharray: '4 3' },
+      markerEnd: undefined,
+      data: { lookup: true },
+    } : {}),
+  };
+});
 
 // Post-process: detect overlapping edge corridors and assign offsets
 function assignOffsets(edges) {
