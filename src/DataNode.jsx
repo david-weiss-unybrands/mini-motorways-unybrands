@@ -18,7 +18,7 @@ function TableauLogo() {
 }
 
 export default function DataNode({ data }) {
-  const { label, grains, accent, dim, stacked, cat, tag, filterHighlight, filterDim } = data;
+  const { label, grains, attrs, accent, dim, stacked, cat, tag, filterHighlight, filterDim } = data;
 
   const isTableau = cat === 'tableau';
 
@@ -47,6 +47,15 @@ export default function DataNode({ data }) {
             <span key={g} className="grain">
               {i > 0 && <span className="sep"> · </span>}
               {g}
+            </span>
+          ))}
+        </div>
+      )}
+      {attrs && attrs.length > 0 && (
+        <div className="node-attrs">
+          {attrs.map((a, i) => (
+            <span key={a} className="attr">
+              {i > 0 && <span className="sep"> · </span>}{a}
             </span>
           ))}
         </div>

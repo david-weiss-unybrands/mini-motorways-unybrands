@@ -85,7 +85,11 @@ export default function App() {
   const filteredEdges = useMemo(() => {
     if (!transformPathNodeIds) return edges;
     return edges.map(e => {
+      const isLookup = e.data?.lookup;
       const onPath = transformIds.has(e.source) || transformIds.has(e.target);
+      if (onPath && isLookup) {
+        return { ...e, style: { stroke: '#d97706', strokeWidth: 2, strokeDasharray: '4 3' }, markerEnd: { type: 'arrowclosed', color: '#d97706', width: 8, height: 8 } };
+      }
       return onPath
         ? { ...e, style: { stroke: '#6366f1', strokeWidth: 2 }, markerEnd: { type: 'arrowclosed', color: '#6366f1', width: 10, height: 10 } }
         : { ...e, style: { ...e.style, opacity: 0.15 } };

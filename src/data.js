@@ -30,7 +30,7 @@ const rawNodes = [
   {id:'ads', label:'fact_ads_data', grains:['ASIN','MSKU','Country'], x:895+X_OFF, y:510, cat:'brand', tag:'Amazon only'},
   {id:'bm_primary', label:'BM Primary Report', grains:['ASIN','Country'], x:820+X_OFF, y:15, cat:'tableau'},
   // Supply Chain
-  {id:'pov', label:'po_visibility_3pls (UB Legacy)', grains:['USIN','Region'], x:-20+X_OFF, y:615, cat:'supply', stacked:true},
+  {id:'pov', label:'po_visibility_3pls (UB Legacy)', grains:['USIN','Region'], attrs:['ASIN'], x:-20+X_OFF, y:615, cat:'supply', stacked:true},
   {id:'inventory', label:'consolidated_inventory', grains:['Location Code','MSKU'], x:-155+X_OFF, y:780, cat:'supply'},
   {id:'erp', label:'erp_mapping (Netsuite)', grains:['USIN','MSKU','Channel','Country'], x:120+X_OFF, y:775, cat:'supply'},
   {id:'erp_item_master', label:'erp_item_master (Netsuite)', grains:['USIN','UPC','Vendor'], x:120+X_OFF, y:890, cat:'supply'},
@@ -46,10 +46,10 @@ const rawNodes = [
 const rawTransforms = [
   {id:'t_f_fa',    label:'Region → Country',              x:564, y:462},
   {id:'t_rf_fa',   label:'MSKU → ASIN, Region → Country', x:560, y:340},
-  {id:'t_s_pov',   label:'JOIN erp_mapping (ASIN→USIN), AGG Country→Region', x:828, y:566},
-  {id:'t_s_fa',    label:'AGG drop MSKU',                 x:915, y:507},
-  {id:'t_s_rgm',   label:'AGG drop MSKU',                 x:1064,y:431},
-  {id:'t_f_pov',   label:'JOIN erp_mapping (ASIN→USIN), AGG Country→Region', x:352, y:542},
+  {id:'t_s_pov',   label:'ASIN→USIN, Country→Region', x:828, y:566},
+  {id:'t_s_fa',    label:'AGG drop MSKU',              x:915, y:507},
+  {id:'t_s_rgm',   label:'AGG drop MSKU',              x:1064,y:431},
+  {id:'t_f_pov',   label:'ASIN→USIN, Country→Region',  x:352, y:542},
 ];
 
 // Scale positions to give cards breathing room
@@ -82,6 +82,7 @@ export const initialNodes = [
       dim: n.dim || false,
       stacked: n.stacked || false,
       tag: n.tag || null,
+      attrs: n.attrs || [],
     },
   })),
   ...rawTransforms.map(t => ({
@@ -108,7 +109,7 @@ const rawEdges = [
   ['pov','days_of_supply'], ['forecast','days_of_supply'],
   ['po_visibility_rf','days_of_supply'], ['forecast_rf','days_of_supply'],
   ['days_of_supply','inventory_detail'],
-  ['erp','pov'],
+  ['erp','t_s_pov','lookup'], ['erp','t_f_pov','lookup'],
   ['erp_item_master','erp'],
   ['flieber','fcst_vis'], ['forecast_actuals','fcst_vis'],
 ];
@@ -135,10 +136,15 @@ function bestHandles(srcId, dstId) {
   }
 }
 
-export const initialEdges = rawEdges.map(([src, dst], i) => ({
+export const initialEdges = rawEdges.map(([src, dst, style], i) => ({
   id: `e${i}`,
   source: src,
   target: dst,
   type: 'smoothstep',
   ...bestHandles(src, dst),
+  ...(style === 'lookup' ? {
+    style: { stroke: '#d97706', strokeWidth: 1.5, strokeDasharray: '4 3' },
+    markerEnd: { type: 'arrowclosed', color: '#d97706', width: 8, height: 8 },
+    data: { lookup: true },
+  } : {}),
 }));
