@@ -59,25 +59,38 @@ export const nodes = [
   {id:'fcst_vis', label:'Forecast\nVisibility', grains:['Snapshot Month','ASIN','Country'], x:310+X_OFF, y:355, cat:'tableau'},
 ];
 
+// === Transformation Nodes ===
+// Small inline nodes representing grain transformations along edges
+export const transforms = [
+  {id:'t_f_fa',    label:'Region→Country',  x:564, y:462,  from:'forecast',    to:'forecast_actuals'},
+  {id:'t_rf_fa_1', label:'SKU→ASIN',        x:493, y:313,  from:'forecast_rf', to:'t_rf_fa_2'},
+  {id:'t_rf_fa_2', label:'Region→Country',  x:631, y:371,  from:'t_rf_fa_1',   to:'forecast_actuals'},
+  {id:'t_s_pov',   label:'Country→Region',  x:828, y:566,  from:'sales',       to:'pov'},
+  {id:'t_s_fa',    label:'SKU→ASIN',        x:915, y:507,  from:'sales',       to:'forecast_actuals'},
+  {id:'t_s_rgm',   label:'SKU→ASIN',        x:1064,y:431,  from:'sales',       to:'rgm'},
+];
+
 // === Edges ===
 export const edges = [
   // Brand Management flows
   ['ads','sales'], ['orders','sales'], ['returns','sales'],
   ['bsr','rgm'], ['traffic','rgm'],
-  ['sales','rgm'],
   ['rgm','bm_primary'],
-  // Demand Planning flows
-  ['forecast','forecast_actuals'], ['forecast_rf','forecast_actuals'],
-  ['sales','forecast_actuals'],
+  // Demand Planning flows (with transforms spliced in)
+  ['forecast','t_f_fa'], ['t_f_fa','forecast_actuals'],
+  ['forecast_rf','t_rf_fa_1'], ['t_rf_fa_2','forecast_actuals'],
+  ['sales','t_s_fa'], ['t_s_fa','forecast_actuals'],
   ['pov','forecast_actuals'],
   ['forecast','flieber'], ['forecast_rf','flieber'],
+  // Brand Management flows (with transforms)
+  ['sales','t_s_rgm'], ['t_s_rgm','rgm'],
   // Supply Chain flows
-  ['forecast','pov'], ['sales','pov'], ['inventory','pov'],
+  ['forecast','pov'], ['sales','t_s_pov'], ['t_s_pov','pov'], ['inventory','pov'],
   ['inventory_tradepeg','po_visibility_rf'], ['forecast_rf','po_visibility_rf'],
   ['pov','days_of_supply'], ['forecast','days_of_supply'],
   ['po_visibility_rf','days_of_supply'], ['forecast_rf','days_of_supply'],
   ['days_of_supply','inventory_detail'],
-  // ERP enrichment (appends ASIN/USIN identifiers)
+  // ERP enrichment
   ['erp','pov'],
   // Tableau flows
   ['flieber','fcst_vis'], ['forecast_actuals','fcst_vis'],

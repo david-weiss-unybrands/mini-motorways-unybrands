@@ -1,6 +1,6 @@
-import { nodes, edges, categories, pillColors } from './config.js';
+import { nodes, edges, transforms, categories, pillColors } from './config.js';
 
-// Build Cytoscape elements
+// Build Cytoscape elements — data table nodes
 const cyNodes = nodes.map(n => {
   const cat = categories[n.cat];
   const grainStr = n.grains.length > 0 ? '\n' + n.grains.join(' · ') : '';
@@ -15,11 +15,28 @@ const cyNodes = nodes.map(n => {
       borderColor: cat.border,
       dim: n.dim || false,
       stacked: n.stacked || false,
+      isTransform: false,
     },
     position: { x: n.x, y: n.y },
   };
 });
 
+// Build transform nodes — small inline transformation indicators
+const cyTransforms = transforms.map(t => ({
+  data: {
+    id: t.id,
+    fullLabel: t.label,
+    cat: 'transform',
+    bgColor: '#f5f0ff',
+    borderColor: '#9b8ec4',
+    dim: false,
+    stacked: false,
+    isTransform: true,
+  },
+  position: { x: t.x, y: t.y },
+}));
+
+// Build edges
 const cyEdges = edges.map(([src, dst], i) => ({
   data: { id: `e${i}`, source: src, target: dst },
 }));
@@ -27,10 +44,10 @@ const cyEdges = edges.map(([src, dst], i) => ({
 // Initialize Cytoscape
 const cy = cytoscape({
   container: document.getElementById('cy'),
-  elements: [...cyNodes, ...cyEdges],
+  elements: [...cyNodes, ...cyTransforms, ...cyEdges],
   layout: { name: 'preset' },
   style: [
-    // --- Default node style ---
+    // --- Default node style (data tables) ---
     {
       selector: 'node',
       style: {
@@ -55,6 +72,26 @@ const cy = cytoscape({
         'corner-radius': 10,
       },
     },
+    // --- Transform nodes (small, diamond-like pills) ---
+    {
+      selector: 'node[?isTransform]',
+      style: {
+        'shape': 'round-rectangle',
+        'width': 'label',
+        'height': 'label',
+        'padding': '4px 8px',
+        'background-color': '#f5f0ff',
+        'border-width': 1,
+        'border-color': '#9b8ec4',
+        'border-opacity': 0.6,
+        'font-size': '7px',
+        'font-weight': 600,
+        'color': '#6b5b95',
+        'text-max-width': '80px',
+        'corner-radius': 8,
+        'opacity': 0.85,
+      },
+    },
     // --- Dimmed nodes (DTC) ---
     {
       selector: 'node[?dim]',
@@ -62,7 +99,7 @@ const cy = cytoscape({
         'opacity': 0.35,
       },
     },
-    // --- Stacked nodes (double border effect) ---
+    // --- Stacked nodes ---
     {
       selector: 'node[?stacked]',
       style: {
@@ -110,11 +147,10 @@ const cy = cytoscape({
 // Fit to view with padding
 cy.fit(undefined, 40);
 
-// Hover effects
-cy.on('mouseover', 'node', evt => {
+// Hover effects (only for non-transform nodes)
+cy.on('mouseover', 'node[!isTransform]', evt => {
   const node = evt.target;
   node.style('border-width', 3);
-  // Highlight connected edges
   node.connectedEdges().style({
     'width': 2.5,
     'line-color': node.data('borderColor'),
@@ -123,7 +159,7 @@ cy.on('mouseover', 'node', evt => {
   });
 });
 
-cy.on('mouseout', 'node', evt => {
+cy.on('mouseout', 'node[!isTransform]', evt => {
   const node = evt.target;
   const isStacked = node.data('stacked');
   node.style('border-width', isStacked ? 3 : (node.data('cat') === 'tableau' ? 1.5 : 2));
