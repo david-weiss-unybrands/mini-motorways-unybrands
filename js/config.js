@@ -78,7 +78,7 @@ export const edges = [
   ['rgm','bm_primary'],
   // Demand Planning flows (with transforms spliced in)
   ['forecast','t_f_fa'], ['t_f_fa','forecast_actuals'],
-  ['forecast_rf','t_rf_fa_1'], ['t_rf_fa_2','forecast_actuals'],
+  ['forecast_rf','t_rf_fa_1'], ['t_rf_fa_1','t_rf_fa_2'], ['t_rf_fa_2','forecast_actuals'],
   ['sales','t_s_fa'], ['t_s_fa','forecast_actuals'],
   ['pov','forecast_actuals'],
   ['forecast','flieber'], ['forecast_rf','flieber'],
