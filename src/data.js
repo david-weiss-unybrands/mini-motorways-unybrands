@@ -19,7 +19,7 @@ const rawNodes = [
   {id:'forecast', label:'flbr_raw_forecast_** (UB Legacy)', grains:['Date','Snapshot Date','Channel','ASIN','Region'], x:25+X_OFF, y:470, cat:'demand', tag:'Amazon only'},
   {id:'forecast_rf', label:'flbr_raw_forecast_** (Redfits)', grains:['Date','Snapshot Date','Channel','SKU','Region'], x:40+X_OFF, y:270, cat:'demand', tag:'Amazon only'},
   {id:'forecast_actuals', label:'forecast_actuals', grains:['Date','ASIN','Country'], x:470+X_OFF, y:450, cat:'demand', stacked:true},
-  {id:'flieber', label:'flbr_monthly_snapshots', grains:['Date','Snapshot Month','Channel','SKU','Region'], x:100+X_OFF, y:370, cat:'demand', stacked:true},
+  {id:'flieber', label:'flbr_monthly_snapshots', grains:['Date','Snapshot Month','Channel','ASIN','Region'], x:100+X_OFF, y:370, cat:'demand', stacked:true},
   // Brand Management
   {id:'orders', label:'fact_order_item', grains:['OrderId','SKU','Date'], attrs:['ASIN','Country'], x:760+X_OFF, y:695, cat:'brand', tag:'Amazon only'},
   {id:'returns', label:'fact_returns', grains:['OrderId','SKU','Date'], attrs:['ASIN','Country'], x:935+X_OFF, y:635, cat:'brand', tag:'Amazon only'},
