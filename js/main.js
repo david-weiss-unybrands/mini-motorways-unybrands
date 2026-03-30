@@ -143,13 +143,13 @@ const cy = cytoscape({
     {
       selector: 'edge',
       style: {
-        'width': 1,
-        'line-color': '#d1d5db',
-        'target-arrow-color': '#d1d5db',
+        'width': 2,
+        'line-color': '#9ca3af',
+        'target-arrow-color': '#9ca3af',
         'target-arrow-shape': 'triangle',
-        'arrow-scale': 0.7,
+        'arrow-scale': 0.9,
         'curve-style': 'bezier',
-        'opacity': 0.5,
+        'opacity': 0.6,
       },
     },
   ],
@@ -200,9 +200,9 @@ cy.on('mouseout', 'node[!isTransform]', evt => {
     'shadow-offset-y': isStacked ? -3 : 2,
   });
   node.connectedEdges().style({
-    'width': 1,
-    'line-color': '#d1d5db',
-    'target-arrow-color': '#d1d5db',
-    'opacity': 0.5,
+    'width': 2,
+    'line-color': '#9ca3af',
+    'target-arrow-color': '#9ca3af',
+    'opacity': 0.6,
   });
 });
