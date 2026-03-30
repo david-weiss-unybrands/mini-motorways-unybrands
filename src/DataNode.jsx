@@ -18,7 +18,7 @@ function TableauLogo() {
 }
 
 export default function DataNode({ data }) {
-  const { label, grains, accent, dim, stacked, cat, filterHighlight, filterDim } = data;
+  const { label, grains, accent, dim, stacked, cat, tag, filterHighlight, filterDim } = data;
 
   const isTableau = cat === 'tableau';
 
@@ -51,6 +51,7 @@ export default function DataNode({ data }) {
           ))}
         </div>
       )}
+      {tag && <div className="node-tag">{tag}</div>}
     </div>
   );
 }

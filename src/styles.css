@@ -70,6 +70,16 @@
   color: #d1d5db;
 }
 
+/* Scope tag */
+.node-tag {
+  margin-top: 4px;
+  font-size: 9px;
+  font-weight: 500;
+  color: #b0b8c4;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
 /* === Transform Nodes === */
 .transform-node {
   background: #fafafa;
