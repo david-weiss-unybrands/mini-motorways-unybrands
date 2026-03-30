@@ -77,6 +77,8 @@ export const edges = [
   ['pov','days_of_supply'], ['forecast','days_of_supply'],
   ['po_visibility_rf','days_of_supply'], ['forecast_rf','days_of_supply'],
   ['days_of_supply','inventory_detail'],
+  // ERP enrichment (appends ASIN/USIN identifiers)
+  ['erp','pov'],
   // Tableau flows
   ['flieber','fcst_vis'], ['forecast_actuals','fcst_vis'],
 ];
