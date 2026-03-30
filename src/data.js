@@ -138,6 +138,6 @@ export const initialEdges = rawEdges.map(([src, dst], i) => ({
   id: `e${i}`,
   source: src,
   target: dst,
-  type: 'straight',
+  type: 'smoothstep',
   ...bestHandles(src, dst),
 }));
