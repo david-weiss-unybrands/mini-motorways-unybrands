@@ -51,12 +51,22 @@ const rawTransforms = [
   {id:'t_s_rgm',   label:'SKU → ASIN',       x:1064,y:431},
 ];
 
+// Scale positions to give cards breathing room
+// Original positions were designed for tiny icons, cards need more space
+const SCALE = 1.8;
+const allRawPositions = [...rawNodes, ...rawTransforms];
+const cx = allRawPositions.reduce((s, n) => s + n.x, 0) / allRawPositions.length;
+const cy = allRawPositions.reduce((s, n) => s + n.y, 0) / allRawPositions.length;
+function spread(x, y) {
+  return { x: cx + (x - cx) * SCALE, y: cy + (y - cy) * SCALE };
+}
+
 // Build React Flow nodes
 export const initialNodes = [
   ...rawNodes.map(n => ({
     id: n.id,
     type: 'dataNode',
-    position: { x: n.x, y: n.y },
+    position: spread(n.x, n.y),
     data: {
       label: n.label,
       grains: n.grains,
@@ -69,7 +79,7 @@ export const initialNodes = [
   ...rawTransforms.map(t => ({
     id: t.id,
     type: 'transformNode',
-    position: { x: t.x, y: t.y },
+    position: spread(t.x, t.y),
     data: { label: t.label },
   })),
 ];
@@ -94,10 +104,10 @@ const rawEdges = [
   ['flieber','fcst_vis'], ['forecast_actuals','fcst_vis'],
 ];
 
-// Build a position lookup for computing best handle pairs
+// Build a position lookup for computing best handle pairs (using scaled positions)
 const posMap = {};
-rawNodes.forEach(n => { posMap[n.id] = { x: n.x, y: n.y }; });
-rawTransforms.forEach(t => { posMap[t.id] = { x: t.x, y: t.y }; });
+rawNodes.forEach(n => { posMap[n.id] = spread(n.x, n.y); });
+rawTransforms.forEach(t => { posMap[t.id] = spread(t.x, t.y); });
 
 function bestHandles(srcId, dstId) {
   const s = posMap[srcId], d = posMap[dstId];
