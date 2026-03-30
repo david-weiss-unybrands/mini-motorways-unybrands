@@ -56,6 +56,7 @@ export default function DataNode({ data }) {
       )}
       {attrs && attrs.length > 0 && (
         <div className="node-attrs">
+          <span className="attr-label">attr</span>
           {attrs.map((a, i) => (
             <span key={a} className="attr">
               {i > 0 && <span className="sep"> · </span>}{a}

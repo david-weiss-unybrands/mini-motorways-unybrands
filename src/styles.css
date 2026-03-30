@@ -87,10 +87,12 @@
   color: #9ca3af;
 }
 
-/* Adjacent columns (non-key) */
+/* Attributes (non-key columns) */
 .node-attrs {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
   margin-top: 4px;
-  padding-left: 2px;
   font-size: 10px;
   font-weight: 400;
   font-family: 'SF Mono', 'Menlo', 'Consolas', 'Liberation Mono', monospace;
@@ -98,6 +100,16 @@
   font-style: italic;
   line-height: 1.5;
   letter-spacing: 0.02em;
+}
+
+.attr-label {
+  font-size: 8px;
+  font-weight: 600;
+  font-style: normal;
+  text-transform: uppercase;
+  color: #9ca3af;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
 }
 
 /* Scope tag */
