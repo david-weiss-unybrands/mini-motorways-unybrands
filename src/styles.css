@@ -98,6 +98,83 @@
   opacity: 1;
 }
 
+/* === Grain filter === */
+.grain-filter-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  background: rgba(244, 245, 247, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #e5e7eb;
+  flex-wrap: wrap;
+}
+
+.grain-filter-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #6b7280;
+  margin-right: 4px;
+  white-space: nowrap;
+}
+
+.grain-pill {
+  font-size: 11px;
+  font-weight: 500;
+  font-family: 'SF Mono', 'Menlo', 'Consolas', 'Liberation Mono', monospace;
+  padding: 3px 10px;
+  border-radius: 12px;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #4b5563;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.grain-pill:hover {
+  border-color: #9ca3af;
+  background: #f9fafb;
+}
+
+.grain-pill.active {
+  background: #1f2937;
+  color: #ffffff;
+  border-color: #1f2937;
+}
+
+.grain-pill.clear {
+  background: transparent;
+  color: #9ca3af;
+  border-style: dashed;
+}
+
+.grain-pill.clear:hover {
+  color: #6b7280;
+  border-color: #9ca3af;
+}
+
+/* Filter states */
+.data-node.filter-highlight {
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.4), 0 2px 8px rgba(99, 102, 241, 0.15);
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+.data-node.filter-dim,
+.transform-node.filter-dim {
+  opacity: 0.15;
+  transition: opacity 0.2s;
+}
+
+.data-node.filter-highlight .node-name {
+  color: #111827;
+}
+
 /* === React Flow overrides === */
 .react-flow__controls {
   border-radius: 8px !important;

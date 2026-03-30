@@ -62,6 +62,9 @@ function spread(x, y) {
   return { x: cx + (x - cx) * SCALE, y: cy + (y - cy) * SCALE };
 }
 
+// Collect all unique grains
+export const allGrains = [...new Set(rawNodes.flatMap(n => n.grains))].sort();
+
 // Build React Flow nodes
 export const initialNodes = [
   ...rawNodes.map(n => ({

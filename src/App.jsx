@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import {
   ReactFlow,
   Background,
@@ -9,7 +9,7 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import './styles.css';
-import { initialNodes, initialEdges } from './data';
+import { initialNodes, initialEdges, allGrains, categories } from './data';
 import DataNode from './DataNode';
 import TransformNode from './TransformNode';
 
@@ -31,11 +31,38 @@ const defaultEdgeOptions = {
 export default function App() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [selectedGrain, setSelectedGrain] = useState(null);
+
+  const filteredNodes = useMemo(() => {
+    if (!selectedGrain) return nodes;
+    return nodes.map(n => {
+      if (n.type === 'transformNode') return { ...n, data: { ...n.data, filterDim: true } };
+      const hasGrain = n.data.grains?.includes(selectedGrain);
+      return { ...n, data: { ...n.data, filterHighlight: hasGrain, filterDim: !hasGrain } };
+    });
+  }, [nodes, selectedGrain]);
 
   return (
     <div style={{ width: '100vw', height: '100vh', background: '#f4f5f7' }}>
+      <div className="grain-filter-bar">
+        <span className="grain-filter-label">Filter by grain:</span>
+        {allGrains.map(g => (
+          <button
+            key={g}
+            className={`grain-pill ${selectedGrain === g ? 'active' : ''}`}
+            onClick={() => setSelectedGrain(selectedGrain === g ? null : g)}
+          >
+            {g}
+          </button>
+        ))}
+        {selectedGrain && (
+          <button className="grain-pill clear" onClick={() => setSelectedGrain(null)}>
+            Clear
+          </button>
+        )}
+      </div>
       <ReactFlow
-        nodes={nodes}
+        nodes={filteredNodes}
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}

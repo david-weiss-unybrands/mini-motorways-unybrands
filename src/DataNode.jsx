@@ -18,13 +18,13 @@ function TableauLogo() {
 }
 
 export default function DataNode({ data }) {
-  const { label, grains, accent, dim, stacked, cat } = data;
+  const { label, grains, accent, dim, stacked, cat, filterHighlight, filterDim } = data;
 
   const isTableau = cat === 'tableau';
 
   return (
     <div
-      className={`data-node ${dim ? 'dim' : ''} ${stacked ? 'stacked' : ''} ${isTableau ? 'tableau' : ''}`}
+      className={`data-node ${dim ? 'dim' : ''} ${stacked ? 'stacked' : ''} ${isTableau ? 'tableau' : ''} ${filterHighlight ? 'filter-highlight' : ''} ${filterDim ? 'filter-dim' : ''}`}
       style={{ borderLeftColor: accent }}
     >
       <Handle type="target" position={Position.Top} id="t-top" className="handle" />

@@ -2,7 +2,7 @@ import { Handle, Position } from '@xyflow/react';
 
 export default function TransformNode({ data }) {
   return (
-    <div className="transform-node">
+    <div className={`transform-node ${data.filterDim ? 'filter-dim' : ''}`}>
       <Handle type="target" position={Position.Top} id="t-top" className="handle" />
       <Handle type="target" position={Position.Left} id="t-left" className="handle" />
       <Handle type="target" position={Position.Right} id="t-right" className="handle" />
