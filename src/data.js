@@ -44,12 +44,12 @@ const rawNodes = [
 
 // Transform nodes (inline on edges)
 const rawTransforms = [
-  {id:'t_f_fa',    label:'Region → Country', x:564, y:462},
-  {id:'t_rf_fa_1', label:'SKU → ASIN',       x:493, y:313},
-  {id:'t_rf_fa_2', label:'Region → Country', x:631, y:371},
-  {id:'t_s_pov',   label:'Country → Region', x:828, y:566},
-  {id:'t_s_fa',    label:'SKU → ASIN',       x:915, y:507},
-  {id:'t_s_rgm',   label:'SKU → ASIN',       x:1064,y:431},
+  {id:'t_f_fa',    label:'Region → Country',              x:564, y:462},
+  {id:'t_rf_fa',   label:'MSKU → ASIN, Region → Country', x:560, y:340},
+  {id:'t_s_pov',   label:'MSKU → USIN, Country → Region', x:828, y:566},
+  {id:'t_s_fa',    label:'MSKU → ASIN',                   x:915, y:507},
+  {id:'t_s_rgm',   label:'MSKU → ASIN',                   x:1064,y:431},
+  {id:'t_f_pov',   label:'ASIN → USIN',                   x:352, y:542},
 ];
 
 // Scale positions to give cards breathing room
@@ -64,6 +64,9 @@ function spread(x, y) {
 
 // Collect all unique grains
 export const allGrains = [...new Set(rawNodes.flatMap(n => n.grains))].sort();
+
+// Set of transform node IDs for path highlighting
+export const transformIds = new Set(rawTransforms.map(t => t.id));
 
 // Build React Flow nodes
 export const initialNodes = [
@@ -94,12 +97,12 @@ const rawEdges = [
   ['bsr','rgm'], ['traffic','rgm'],
   ['rgm','bm_primary'],
   ['forecast','t_f_fa'], ['t_f_fa','forecast_actuals'],
-  ['forecast_rf','t_rf_fa_1'], ['t_rf_fa_1','t_rf_fa_2'], ['t_rf_fa_2','forecast_actuals'],
+  ['forecast_rf','t_rf_fa'], ['t_rf_fa','forecast_actuals'],
   ['sales','t_s_fa'], ['t_s_fa','forecast_actuals'],
   ['pov','forecast_actuals'],
   ['forecast','flieber'], ['forecast_rf','flieber'],
   ['sales','t_s_rgm'], ['t_s_rgm','rgm'],
-  ['forecast','pov'], ['sales','t_s_pov'], ['t_s_pov','pov'], ['inventory','pov'],
+  ['forecast','t_f_pov'], ['t_f_pov','pov'], ['sales','t_s_pov'], ['t_s_pov','pov'], ['inventory','pov'],
   ['inventory_tradepeg','po_visibility_rf'], ['forecast_rf','po_visibility_rf'],
   ['pov','days_of_supply'], ['forecast','days_of_supply'],
   ['po_visibility_rf','days_of_supply'], ['forecast_rf','days_of_supply'],

@@ -9,7 +9,7 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import './styles.css';
-import { initialNodes, initialEdges, allGrains, categories } from './data';
+import { initialNodes, initialEdges, allGrains, transformIds } from './data';
 import DataNode from './DataNode';
 import TransformNode from './TransformNode';
 
@@ -32,6 +32,7 @@ export default function App() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [selectedGrains, setSelectedGrains] = useState([]);
+  const [showTransforms, setShowTransforms] = useState(false);
 
   const toggleGrain = useCallback((g) => {
     setSelectedGrains(prev =>
@@ -39,14 +40,57 @@ export default function App() {
     );
   }, []);
 
-  const filteredNodes = useMemo(() => {
-    if (selectedGrains.length === 0) return nodes;
-    return nodes.map(n => {
-      if (n.type === 'transformNode') return { ...n, data: { ...n.data, filterDim: true } };
-      const hasGrain = selectedGrains.every(g => n.data.grains?.includes(g));
-      return { ...n, data: { ...n.data, filterHighlight: hasGrain, filterDim: !hasGrain } };
+  // Compute which nodes sit on a transform path (source → transform → target)
+  const transformPathNodeIds = useMemo(() => {
+    if (!showTransforms) return null;
+    const ids = new Set();
+    edges.forEach(e => {
+      if (transformIds.has(e.source) || transformIds.has(e.target)) {
+        ids.add(e.source);
+        ids.add(e.target);
+      }
     });
-  }, [nodes, selectedGrains]);
+    return ids;
+  }, [edges, showTransforms]);
+
+  const filteredNodes = useMemo(() => {
+    let result = nodes;
+
+    if (selectedGrains.length > 0) {
+      result = result.map(n => {
+        if (n.type === 'transformNode') return { ...n, data: { ...n.data, filterDim: true } };
+        const hasGrain = selectedGrains.every(g => n.data.grains?.includes(g));
+        return { ...n, data: { ...n.data, filterHighlight: hasGrain, filterDim: !hasGrain } };
+      });
+    }
+
+    if (transformPathNodeIds) {
+      result = result.map(n => {
+        const onPath = transformPathNodeIds.has(n.id);
+        return {
+          ...n,
+          data: {
+            ...n.data,
+            transformHighlight: onPath && n.type === 'transformNode',
+            filterDim: n.data?.filterDim || !onPath,
+            filterHighlight: n.data?.filterHighlight || (onPath && n.type !== 'transformNode'),
+          },
+        };
+      });
+    }
+
+    return result;
+  }, [nodes, selectedGrains, transformPathNodeIds]);
+
+  const filteredEdges = useMemo(() => {
+    if (!transformPathNodeIds) return edges;
+    return edges.map(e => {
+      const onPath = transformIds.has(e.source) || transformIds.has(e.target);
+      return onPath
+        ? { ...e, style: { stroke: '#6366f1', strokeWidth: 2 }, markerEnd: { type: 'arrowclosed', color: '#6366f1', width: 10, height: 10 } }
+        : { ...e, style: { ...e.style, opacity: 0.15 } };
+    });
+  }, [edges, transformPathNodeIds]);
 
   return (
     <div style={{ width: '100vw', height: '100vh', background: '#f4f5f7' }}>
@@ -61,15 +105,22 @@ export default function App() {
             {g}
           </button>
         ))}
-        {selectedGrains.length > 0 && (
-          <button className="grain-pill clear" onClick={() => setSelectedGrains([])}>
+        {(selectedGrains.length > 0 || showTransforms) && (
+          <button className="grain-pill clear" onClick={() => { setSelectedGrains([]); setShowTransforms(false); }}>
             Clear
           </button>
         )}
+        <span className="filter-divider" />
+        <button
+          className={`grain-pill transform-toggle ${showTransforms ? 'active' : ''}`}
+          onClick={() => setShowTransforms(v => !v)}
+        >
+          Show Transforms
+        </button>
       </div>
       <ReactFlow
         nodes={filteredNodes}
-        edges={edges}
+        edges={filteredEdges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         nodeTypes={nodeTypes}
