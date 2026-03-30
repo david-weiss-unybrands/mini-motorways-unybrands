@@ -53,7 +53,7 @@ const rawTransforms = [
 
 // Scale positions to give cards breathing room
 // Original positions were designed for tiny icons, cards need more space
-const SCALE = 1.8;
+const SCALE = 1.4;
 const allRawPositions = [...rawNodes, ...rawTransforms];
 const cx = allRawPositions.reduce((s, n) => s + n.x, 0) / allRawPositions.length;
 const cy = allRawPositions.reduce((s, n) => s + n.y, 0) / allRawPositions.length;
