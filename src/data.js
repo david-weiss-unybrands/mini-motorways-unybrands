@@ -136,11 +136,11 @@ function bestHandles(srcId, dstId) {
   }
 }
 
-export const initialEdges = rawEdges.map(([src, dst, style], i) => ({
+const rawInitialEdges = rawEdges.map(([src, dst, style], i) => ({
   id: `e${i}`,
   source: src,
   target: dst,
-  type: 'smoothstep',
+  type: 'offsetEdge',
   ...bestHandles(src, dst),
   ...(style === 'lookup' ? {
     sourceHandle: 's-left',
@@ -150,3 +150,73 @@ export const initialEdges = rawEdges.map(([src, dst, style], i) => ({
     data: { lookup: true },
   } : {}),
 }));
+
+// Post-process: detect overlapping edge corridors and assign offsets
+function assignOffsets(edges) {
+  const SPACING = 14;
+
+  // Group edges by corridor signature
+  const corridors = {};
+  edges.forEach(e => {
+    const sp = posMap[e.source];
+    const tp = posMap[e.target];
+    if (!sp || !tp) return;
+
+    const sh = e.sourceHandle || 's-bottom';
+    const th = e.targetHandle || 't-top';
+    const handlePair = `${sh.split('-')[1]}-${th.split('-')[1]}`;
+
+    // Quantize corridor: for same-axis handle pairs, use the midpoint range
+    let corridorKey;
+    if (handlePair === 'left-left' || handlePair === 'right-right') {
+      // Vertical corridor — group by overlapping Y ranges
+      const minY = Math.min(sp.y, tp.y);
+      const maxY = Math.max(sp.y, tp.y);
+      const xBand = Math.round(Math.min(sp.x, tp.x) / 100);
+      corridorKey = `${handlePair}-x${xBand}-y${Math.round(minY / 200)}`;
+    } else if (handlePair === 'top-top' || handlePair === 'bottom-bottom') {
+      const minX = Math.min(sp.x, tp.x);
+      const maxX = Math.max(sp.x, tp.x);
+      const yBand = Math.round(Math.min(sp.y, tp.y) / 100);
+      corridorKey = `${handlePair}-y${yBand}-x${Math.round(minX / 200)}`;
+    } else if (handlePair === 'bottom-top' || handlePair === 'top-bottom') {
+      // Vertical flow — corridor is the horizontal midpoint band
+      const midX = Math.round(((sp.x + tp.x) / 2) / 60);
+      corridorKey = `${handlePair}-mx${midX}`;
+    } else if (handlePair === 'right-left' || handlePair === 'left-right') {
+      // Horizontal flow
+      const midY = Math.round(((sp.y + tp.y) / 2) / 60);
+      corridorKey = `${handlePair}-my${midY}`;
+    } else {
+      // Mixed
+      const midX = Math.round(((sp.x + tp.x) / 2) / 80);
+      const midY = Math.round(((sp.y + tp.y) / 2) / 80);
+      corridorKey = `${handlePair}-${midX}-${midY}`;
+    }
+
+    if (!corridors[corridorKey]) corridors[corridorKey] = [];
+    corridors[corridorKey].push(e);
+  });
+
+  // Assign offsets within each corridor group
+  Object.values(corridors).forEach(group => {
+    if (group.length <= 1) {
+      group[0].data = { ...group[0].data, offset: 0 };
+      return;
+    }
+    // Sort by source position for consistent ordering
+    group.sort((a, b) => {
+      const ap = posMap[a.source];
+      const bp = posMap[b.source];
+      return (ap.x + ap.y) - (bp.x + bp.y);
+    });
+    const mid = (group.length - 1) / 2;
+    group.forEach((e, i) => {
+      e.data = { ...e.data, offset: (i - mid) * SPACING };
+    });
+  });
+
+  return edges;
+}
+
+export const initialEdges = assignOffsets(rawInitialEdges);

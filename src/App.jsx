@@ -12,10 +12,15 @@ import './styles.css';
 import { initialNodes, initialEdges, allGrains, transformIds } from './data';
 import DataNode from './DataNode';
 import TransformNode from './TransformNode';
+import OffsetEdge from './OffsetEdge';
 
 const nodeTypes = {
   dataNode: DataNode,
   transformNode: TransformNode,
+};
+
+const edgeTypes = {
+  offsetEdge: OffsetEdge,
 };
 
 const defaultEdgeOptions = {
@@ -128,6 +133,7 @@ export default function App() {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
         defaultEdgeOptions={defaultEdgeOptions}
         fitView
         fitViewOptions={{ padding: 0.15 }}
