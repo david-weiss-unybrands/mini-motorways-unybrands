@@ -58,19 +58,19 @@
 /* Composite key container */
 .node-grains-container {
   display: flex;
-  align-items: flex-start;
-  gap: 4px;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
   margin-top: 6px;
   background: #f3f4f6;
   border: 1px solid #e5e7eb;
   border-radius: 4px;
-  padding: 3px 6px;
+  padding: 4px 6px;
 }
 
 .key-icon {
-  font-size: 9px;
-  line-height: 1.5;
-  flex-shrink: 0;
+  font-size: 8px;
+  line-height: 1;
 }
 
 /* Grain tags */

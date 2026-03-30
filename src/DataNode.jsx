@@ -43,7 +43,7 @@ export default function DataNode({ data }) {
       <div className="node-name">{label}</div>
       {grains.length > 0 && (
         <div className="node-grains-container">
-          <span className="key-icon">🔑</span>
+          <div className="key-icon">🔑</div>
           <div className="node-grains">
             {grains.map((g, i) => (
               <span key={g} className="grain">
