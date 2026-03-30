@@ -33,7 +33,7 @@ const rawNodes = [
   {id:'pov', label:'po_visibility_3pls (UB Legacy)', grains:['USIN','Region'], x:-20+X_OFF, y:615, cat:'supply', stacked:true},
   {id:'inventory', label:'consolidated_inventory', grains:['Location Code','MSKU'], x:-155+X_OFF, y:780, cat:'supply'},
   {id:'erp', label:'erp_mapping (Netsuite)', grains:['USIN','MSKU','Channel','Country'], x:120+X_OFF, y:775, cat:'supply'},
-  {id:'erp_item_master', label:'erp_item_master (Netsuite)', grains:['USIN','UPC'], x:120+X_OFF, y:890, cat:'supply'},
+  {id:'erp_item_master', label:'erp_item_master (Netsuite)', grains:['USIN','UPC','Vendor'], x:120+X_OFF, y:890, cat:'supply'},
   {id:'inventory_tradepeg', label:'consolidated_inventory_rf', grains:['Location Code','MSKU'], x:-130+X_OFF, y:160, cat:'supply'},
   {id:'po_visibility_rf', label:'po_visibility_rf', grains:['MSKU','Region'], x:-130+X_OFF, y:285, cat:'supply'},
   {id:'days_of_supply', label:'vw_scm_days_of_supply', grains:['USIN','Region'], x:-150+X_OFF, y:460, cat:'supply', stacked:true},
