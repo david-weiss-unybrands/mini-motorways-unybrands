@@ -1,90 +1,82 @@
-// === Canvas Setup ===
-const canvas = document.getElementById('mm');
-export const ctx = canvas.getContext('2d');
-const dpr = window.devicePixelRatio || 1;
-export const W = 1450, H = 900;
-canvas.width = W * dpr;
-canvas.height = H * dpr;
-canvas.style.aspectRatio = `${W}/${H}`;
-ctx.scale(dpr, dpr);
-
-export const frameCount = { value: 0 };
-
-// === Theme Colors ===
+// === Theme ===
 export const isDark = false;
-export const bg = isDark ? '#1a1a1a' : '#f8f9fb';
-export const edgeColor = isDark ? '#555' : '#c0c4cc';
-export const textMain = isDark ? '#e8e8e8' : '#2c2c2a';
-export const textSub = isDark ? '#aaa' : '#6b7280';
-export const signBg = isDark ? 'rgba(30,30,30,0.92)' : 'rgba(255,255,255,0.95)';
-export const signBorder = isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.08)';
-export const nodeShadow = isDark ? 'rgba(0,0,0,0.3)' : 'rgba(0,0,0,0.08)';
 
 // === Pill Colors (grain type color map) ===
 export const pillColors = {
-  ASIN:{bg:isDark?'#3C3489':'#EEEDFE',text:isDark?'#CECBF6':'#534AB7'},
-  SKU:{bg:isDark?'#0C447C':'#E6F1FB',text:isDark?'#B5D4F4':'#185FA5'},
-  USIN:{bg:isDark?'#633806':'#FAEEDA',text:isDark?'#FAC775':'#854F0B'},
-  Country:{bg:isDark?'#085041':'#E1F5EE',text:isDark?'#9FE1CB':'#0F6E56'},
-  Region:{bg:isDark?'#4A1B0C':'#FAECE7',text:isDark?'#F5C4B3':'#993C1D'},
-  Channel:{bg:isDark?'#7C1044':'#FDE7F0',text:isDark?'#F5A0C4':'#B51D5E'},
-  MSKU:{bg:isDark?'#3D3D3D':'#EDEDF0',text:isDark?'#C0C0C8':'#555566'},
-  FNSKU:{bg:isDark?'#1A4D1A':'#E6F5E6',text:isDark?'#8FD98F':'#2D7A2D'},
-  'Location Code':{bg:isDark?'#0A4A5C':'#E2F4F8',text:isDark?'#7DD4E8':'#0C6980'},
-  'Snapshot Month':{bg:isDark?'#5C4A0A':'#FFF5D6',text:isDark?'#E8D47D':'#806810'},
+  ASIN:{bg:'#EEEDFE',text:'#534AB7'},
+  SKU:{bg:'#E6F1FB',text:'#185FA5'},
+  USIN:{bg:'#FAEEDA',text:'#854F0B'},
+  Country:{bg:'#E1F5EE',text:'#0F6E56'},
+  Region:{bg:'#FAECE7',text:'#993C1D'},
+  Channel:{bg:'#FDE7F0',text:'#B51D5E'},
+  MSKU:{bg:'#EDEDF0',text:'#555566'},
+  FNSKU:{bg:'#E6F5E6',text:'#2D7A2D'},
+  'Location Code':{bg:'#E2F4F8',text:'#0C6980'},
+  'Snapshot Month':{bg:'#FFF5D6',text:'#806810'},
 };
 
-// === Locations ===
-export const locations = [
-  // DTC (dormant / isolated)
-  {id:'shopify',label:'Shopify Sales',grains:[],x:0,y:0,color:isDark?'#4a5a30':'#c4ceaf',accent:isDark?'#3a4a22':'#8a9a70',w:52,h:34,dim:true},
-  {id:'tiktok',label:'Tiktok',grains:[],x:0,y:0,color:isDark?'#4a5a30':'#c4ceaf',accent:isDark?'#3a4a22':'#8a9a70',w:45,h:34,dim:true},
-  {id:'walmart',label:'Walmart',grains:[],x:0,y:0,color:isDark?'#4a5a30':'#c4ceaf',accent:isDark?'#3a4a22':'#8a9a70',w:52,h:36,dim:true},
-  // ERP (isolated)
-  {id:'erp',label:'ERP Mapping\n(Netsuite)',grains:['USIN','MSKU','FNSKU','Channel','Country'],x:0,y:0,color:isDark?'#BA7517':'#FAC775',accent:'#854F0B',w:55,h:35},
-  // Demand Planning (purple)
-  {id:'forecast',label:'Forecast\n(UB Legacy)',grains:['Channel','Region','ASIN'],x:0,y:0,color:isDark?'#7F77DD':'#AFA9EC',accent:'#534AB7',w:55,h:35},
-  {id:'forecast_rf',label:'Forecast\n(Redfits)',grains:['Channel','Region','MSKU'],x:0,y:0,color:isDark?'#9F77DD':'#CECBF6',accent:'#3C3489',w:55,h:35},
-  {id:'forecast_actuals',label:'Forecast\nActuals',grains:['ASIN','Country'],x:0,y:0,color:isDark?'#7F77DD':'#C5C1F0',accent:'#534AB7',w:68,h:60,stacked:true},
-  {id:'flieber',label:'Flieber Monthly\nSnapshots',grains:['Snapshot Month','Channel','Region','ASIN'],x:0,y:0,color:isDark?'#7F77DD':'#C5C1F0',accent:'#534AB7',w:65,h:50,stacked:true},
-  // Brand Management (blue)
-  {id:'orders',label:'Orders',grains:['ASIN','MSKU','Country'],x:0,y:0,color:isDark?'#378ADD':'#A3CBF0',accent:'#185FA5',w:50,h:34},
-  {id:'returns',label:'Returns',grains:['ASIN','MSKU','Country'],x:0,y:0,color:isDark?'#378ADD':'#A3CBF0',accent:'#185FA5',w:50,h:34},
-  {id:'sales',label:'ft_usd_sales',grains:['ASIN','MSKU','Country'],x:0,y:0,color:isDark?'#378ADD':'#85B7EB',accent:'#185FA5',w:62,h:46,stacked:true},
-  {id:'rgm',label:'Report Global\nMetrics',grains:['ASIN','Country'],x:0,y:0,color:isDark?'#378ADD':'#A3CBF0',accent:'#185FA5',w:72,h:64,stacked:true},
-  {id:'traffic',label:'Traffic',grains:['ASIN','Country'],x:0,y:0,color:isDark?'#378ADD':'#A3CBF0',accent:'#185FA5',w:45,h:30},
-  {id:'bsr',label:'BSR',grains:['ASIN','Country'],x:0,y:0,color:isDark?'#378ADD':'#A3CBF0',accent:'#185FA5',w:40,h:28},
-  {id:'ads',label:'Advertising',grains:['ASIN','MSKU','Country'],x:0,y:0,color:isDark?'#378ADD':'#A3CBF0',accent:'#185FA5',w:52,h:32},
-  {id:'bm_primary',label:'BM Primary\nReport',grains:['ASIN','Country'],x:0,y:0,color:'#ffffff',accent:isDark?'rgba(255,255,255,0.25)':'rgba(0,0,0,0.15)',w:95,h:78,tableau:true},
-  // Supply Chain (orange)
-  {id:'pov',label:'PO Visibility\n3PLs (UB Legacy)',grains:['USIN','Region'],x:0,y:0,color:isDark?'#BA7517':'#F0D08A',accent:'#854F0B',w:72,h:62,stacked:true},
-  {id:'inventory',label:'Inventory\n(UB Legacy)',grains:['Location Code','MSKU'],x:0,y:0,color:isDark?'#BA7517':'#FAC775',accent:'#854F0B',w:60,h:40},
-  {id:'inventory_tradepeg',label:'Inventory\nTradePeg',grains:['Location Code','MSKU'],x:0,y:0,color:isDark?'#BA7517':'#FAC775',accent:'#854F0B',w:55,h:35},
-  {id:'po_visibility_rf',label:'PO Visibility\nRF',grains:['MSKU','Region'],x:0,y:0,color:isDark?'#BA7517':'#FAC775',accent:'#854F0B',w:55,h:35},
-  {id:'days_of_supply',label:'Days of\nSupply',grains:['USIN','Region'],x:0,y:0,color:isDark?'#BA7517':'#F0D08A',accent:'#854F0B',w:55,h:45,stacked:true},
-  {id:'inventory_detail',label:'Inventory\nDetail',grains:['USIN','Region'],x:0,y:0,color:'#ffffff',accent:isDark?'rgba(255,255,255,0.25)':'rgba(0,0,0,0.15)',w:95,h:78,tableau:true},
-  // Tableau Reports
-  {id:'fcst_vis',label:'Forecast\nVisibility',grains:['Snapshot Month','ASIN','Country'],x:0,y:0,color:'#ffffff',accent:isDark?'rgba(255,255,255,0.25)':'rgba(0,0,0,0.15)',w:95,h:78,tableau:true},
+// === Category Colors ===
+export const categories = {
+  brand: { bg: '#A3CBF0', border: '#185FA5', label: 'Brand Management' },
+  demand: { bg: '#AFA9EC', border: '#534AB7', label: 'Demand Planning' },
+  supply: { bg: '#FAC775', border: '#854F0B', label: 'Supply Chain' },
+  tableau: { bg: '#ffffff', border: '#4E79A7', label: 'Tableau Report' },
+  dtc: { bg: '#c4ceaf', border: '#8a9a70', label: 'DTC (Coming Soon)' },
+};
+
+// Original positions (with 350px x-offset already applied)
+const X_OFF = 350;
+
+// === Nodes ===
+export const nodes = [
+  // DTC (dimmed)
+  {id:'shopify', label:'Shopify Sales', grains:[], x:385+X_OFF, y:80, cat:'dtc', dim:true},
+  {id:'tiktok', label:'Tiktok', grains:[], x:265+X_OFF, y:75, cat:'dtc', dim:true},
+  {id:'walmart', label:'Walmart', grains:[], x:325+X_OFF, y:10, cat:'dtc', dim:true},
+  // Demand Planning
+  {id:'forecast', label:'Forecast\n(UB Legacy)', grains:['Channel','Region','ASIN'], x:25+X_OFF, y:470, cat:'demand'},
+  {id:'forecast_rf', label:'Forecast\n(Redfits)', grains:['Channel','Region','MSKU'], x:40+X_OFF, y:270, cat:'demand'},
+  {id:'forecast_actuals', label:'Forecast\nActuals', grains:['ASIN','Country'], x:470+X_OFF, y:450, cat:'demand', stacked:true},
+  {id:'flieber', label:'Flieber Monthly\nSnapshots', grains:['Snapshot Month','Channel','Region','ASIN'], x:100+X_OFF, y:370, cat:'demand', stacked:true},
+  // Brand Management
+  {id:'orders', label:'Orders', grains:['ASIN','MSKU','Country'], x:760+X_OFF, y:695, cat:'brand'},
+  {id:'returns', label:'Returns', grains:['ASIN','MSKU','Country'], x:935+X_OFF, y:635, cat:'brand'},
+  {id:'sales', label:'ft_usd_sales', grains:['ASIN','MSKU','Country'], x:635+X_OFF, y:550, cat:'brand', stacked:true},
+  {id:'rgm', label:'Report Global\nMetrics', grains:['ASIN','Country'], x:820+X_OFF, y:270, cat:'brand', stacked:true},
+  {id:'traffic', label:'Traffic', grains:['ASIN','Country'], x:995+X_OFF, y:355, cat:'brand'},
+  {id:'bsr', label:'BSR', grains:['ASIN','Country'], x:995+X_OFF, y:180, cat:'brand'},
+  {id:'ads', label:'Advertising', grains:['ASIN','MSKU','Country'], x:895+X_OFF, y:510, cat:'brand'},
+  {id:'bm_primary', label:'BM Primary\nReport', grains:['ASIN','Country'], x:820+X_OFF, y:15, cat:'tableau'},
+  // Supply Chain
+  {id:'pov', label:'PO Visibility\n3PLs (UB Legacy)', grains:['USIN','Region'], x:-20+X_OFF, y:615, cat:'supply', stacked:true},
+  {id:'inventory', label:'Inventory\n(UB Legacy)\nNetsuite', grains:['Location Code','MSKU'], x:-155+X_OFF, y:780, cat:'supply'},
+  {id:'erp', label:'ERP Mapping\n(Netsuite)', grains:['USIN','MSKU','FNSKU','Channel','Country'], x:120+X_OFF, y:775, cat:'supply'},
+  {id:'inventory_tradepeg', label:'Inventory\nTradePeg', grains:['Location Code','MSKU'], x:-130+X_OFF, y:160, cat:'supply'},
+  {id:'po_visibility_rf', label:'PO Visibility\nRF', grains:['MSKU','Region'], x:-130+X_OFF, y:285, cat:'supply'},
+  {id:'days_of_supply', label:'Days of\nSupply', grains:['USIN','Region'], x:-150+X_OFF, y:460, cat:'supply', stacked:true},
+  {id:'inventory_detail', label:'Inventory\nDetail', grains:['USIN','Region'], x:-300+X_OFF, y:460, cat:'tableau'},
+  // Tableau
+  {id:'fcst_vis', label:'Forecast\nVisibility', grains:['Snapshot Month','ASIN','Country'], x:310+X_OFF, y:355, cat:'tableau'},
 ];
 
-// === All Edges ===
-export const allEdges = [
-  // Brand Management
+// === Edges ===
+export const edges = [
+  // Brand Management flows
   ['ads','sales'], ['orders','sales'], ['returns','sales'],
   ['bsr','rgm'], ['traffic','rgm'],
   ['sales','rgm'],
   ['rgm','bm_primary'],
-  // Demand Planning
+  // Demand Planning flows
   ['forecast','forecast_actuals'], ['forecast_rf','forecast_actuals'],
   ['sales','forecast_actuals'],
   ['pov','forecast_actuals'],
   ['forecast','flieber'], ['forecast_rf','flieber'],
-  // Supply Chain
+  // Supply Chain flows
   ['forecast','pov'], ['sales','pov'], ['inventory','pov'],
   ['inventory_tradepeg','po_visibility_rf'], ['forecast_rf','po_visibility_rf'],
   ['pov','days_of_supply'], ['forecast','days_of_supply'],
   ['po_visibility_rf','days_of_supply'], ['forecast_rf','days_of_supply'],
   ['days_of_supply','inventory_detail'],
-  // Tableau
+  // Tableau flows
   ['flieber','fcst_vis'], ['forecast_actuals','fcst_vis'],
 ];

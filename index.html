@@ -3,15 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Network Graph</title>
+<title>Data Network Graph</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: #f8f9fb; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; padding: 1rem; }
-  canvas { width: 100%; max-width: 1450px; border-radius: 8px; cursor: default; }
+  body { background: #f8f9fb; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+  #cy {
+    width: 100%;
+    height: 100vh;
+  }
 </style>
 </head>
 <body>
-<canvas id="mm"></canvas>
+<div id="cy"></div>
+<script src="https://unpkg.com/cytoscape@3.30.4/dist/cytoscape.min.js"></script>
 <script type="module" src="js/main.js"></script>
 </body>
 </html>
