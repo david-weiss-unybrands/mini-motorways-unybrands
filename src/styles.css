@@ -1,0 +1,96 @@
+/* === Data Nodes === */
+.data-node {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-left: 3px solid;
+  border-radius: 8px;
+  padding: 10px 14px;
+  min-width: 100px;
+  max-width: 180px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.04);
+  transition: box-shadow 0.2s, border-color 0.2s;
+  cursor: grab;
+}
+
+.data-node:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12), 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.data-node.dim {
+  opacity: 0.3;
+}
+
+.data-node.stacked {
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.08),
+    3px -3px 0 -1px #ffffff,
+    3px -3px 0 0 #e5e7eb;
+}
+
+.data-node.tableau {
+  border-style: dashed;
+}
+
+/* Node name */
+.node-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: #1f2937;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+
+/* Grain tags */
+.node-grains {
+  margin-top: 6px;
+  font-size: 9px;
+  font-weight: 400;
+  font-family: 'SF Mono', 'Menlo', 'Consolas', 'Liberation Mono', monospace;
+  color: #9ca3af;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+}
+
+.node-grains .sep {
+  color: #d1d5db;
+}
+
+/* === Transform Nodes === */
+.transform-node {
+  background: #fafafa;
+  border: 1px dashed #d1d5db;
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-size: 8px;
+  font-weight: 500;
+  color: #6b7280;
+  white-space: nowrap;
+  cursor: grab;
+}
+
+/* === Handles (connection points) === */
+.handle {
+  width: 6px !important;
+  height: 6px !important;
+  background: #d1d5db !important;
+  border: none !important;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.data-node:hover .handle,
+.transform-node:hover .handle {
+  opacity: 1;
+}
+
+/* === React Flow overrides === */
+.react-flow__controls {
+  border-radius: 8px !important;
+  border: 1px solid #e5e7eb !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06) !important;
+}
+
+.react-flow__controls-button {
+  border: none !important;
+  border-bottom: 1px solid #f3f4f6 !important;
+}
