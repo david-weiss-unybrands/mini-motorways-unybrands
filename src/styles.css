@@ -29,6 +29,21 @@
 
 .data-node.tableau {
   border-style: dashed;
+  border-left: 3px solid #0891b2;
+  padding-top: 30px;
+  position: relative;
+}
+
+/* Tableau badge */
+.tableau-badge {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  opacity: 0.7;
+}
+
+.tableau-logo {
+  display: block;
 }
 
 /* Node name */
