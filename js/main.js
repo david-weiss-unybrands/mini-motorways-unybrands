@@ -66,11 +66,11 @@ const cy = cytoscape({
         'text-max-width': '120px',
         'line-height': 1.5,
         'corner-radius': 8,
-        // Soft shadow for card effect
-        'shadow-blur': 12,
+        // Card shadow
+        'shadow-blur': 15,
         'shadow-offset-x': 0,
-        'shadow-offset-y': 2,
-        'shadow-color': 'rgba(0, 0, 0, 0.06)',
+        'shadow-offset-y': 4,
+        'shadow-color': 'rgba(0, 0, 0, 0.18)',
         'shadow-opacity': 1,
         // Colored left accent stripe via border
         'border-width': 1,
@@ -143,13 +143,13 @@ const cy = cytoscape({
     {
       selector: 'edge',
       style: {
-        'width': 2,
-        'line-color': '#9ca3af',
-        'target-arrow-color': '#9ca3af',
+        'width': 2.5,
+        'line-color': '#6b7280',
+        'target-arrow-color': '#6b7280',
         'target-arrow-shape': 'triangle',
-        'arrow-scale': 0.9,
+        'arrow-scale': 1.2,
         'curve-style': 'bezier',
-        'opacity': 0.6,
+        'opacity': 0.7,
       },
     },
   ],
@@ -200,9 +200,9 @@ cy.on('mouseout', 'node[!isTransform]', evt => {
     'shadow-offset-y': isStacked ? -3 : 2,
   });
   node.connectedEdges().style({
-    'width': 2,
-    'line-color': '#9ca3af',
-    'target-arrow-color': '#9ca3af',
-    'opacity': 0.6,
+    'width': 2.5,
+    'line-color': '#6b7280',
+    'target-arrow-color': '#6b7280',
+    'opacity': 0.7,
   });
 });
