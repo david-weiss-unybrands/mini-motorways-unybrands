@@ -33,7 +33,7 @@
 
 /* Node name */
 .node-name {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
   color: #1f2937;
   line-height: 1.35;
@@ -43,7 +43,7 @@
 /* Grain tags */
 .node-grains {
   margin-top: 6px;
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 400;
   font-family: 'SF Mono', 'Menlo', 'Consolas', 'Liberation Mono', monospace;
   color: #9ca3af;
