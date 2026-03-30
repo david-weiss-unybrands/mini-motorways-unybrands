@@ -19,12 +19,12 @@ const nodeTypes = {
 };
 
 const defaultEdgeOptions = {
-  style: { stroke: '#94a3b8', strokeWidth: 2 },
+  style: { stroke: '#d1d5db', strokeWidth: 1.5 },
   markerEnd: {
     type: 'arrowclosed',
-    color: '#94a3b8',
-    width: 16,
-    height: 16,
+    color: '#d1d5db',
+    width: 10,
+    height: 10,
   },
 };
 
