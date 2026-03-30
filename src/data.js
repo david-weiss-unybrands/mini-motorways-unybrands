@@ -33,6 +33,7 @@ const rawNodes = [
   {id:'pov', label:'PO Visibility 3PLs (UB Legacy)', grains:['USIN','Region'], x:-20+X_OFF, y:615, cat:'supply', stacked:true},
   {id:'inventory', label:'Inventory (UB Legacy) Netsuite', grains:['Location Code','MSKU'], x:-155+X_OFF, y:780, cat:'supply'},
   {id:'erp', label:'ERP Mapping (Netsuite)', grains:['USIN','MSKU','FNSKU','Channel','Country'], x:120+X_OFF, y:775, cat:'supply'},
+  {id:'erp_item_master', label:'ERP Item Master (Netsuite)', grains:['USIN','Vendor SKU'], x:120+X_OFF, y:890, cat:'supply'},
   {id:'inventory_tradepeg', label:'Inventory TradePeg', grains:['Location Code','MSKU'], x:-130+X_OFF, y:160, cat:'supply'},
   {id:'po_visibility_rf', label:'PO Visibility RF', grains:['MSKU','Region'], x:-130+X_OFF, y:285, cat:'supply'},
   {id:'days_of_supply', label:'Days of Supply', grains:['USIN','Region'], x:-150+X_OFF, y:460, cat:'supply', stacked:true},
@@ -101,6 +102,7 @@ const rawEdges = [
   ['po_visibility_rf','days_of_supply'], ['forecast_rf','days_of_supply'],
   ['days_of_supply','inventory_detail'],
   ['erp','pov'],
+  ['erp_item_master','erp'],
   ['flieber','fcst_vis'], ['forecast_actuals','fcst_vis'],
 ];
 
