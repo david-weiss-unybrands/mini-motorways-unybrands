@@ -15,13 +15,13 @@ export const pillColors = {
   'Snapshot Month':{bg:'#FFF5D6',text:'#806810'},
 };
 
-// === Category Colors ===
+// === Category Colors (monochrome + accent) ===
 export const categories = {
-  brand: { bg: '#A3CBF0', border: '#185FA5', label: 'Brand Management' },
-  demand: { bg: '#AFA9EC', border: '#534AB7', label: 'Demand Planning' },
-  supply: { bg: '#FAC775', border: '#854F0B', label: 'Supply Chain' },
-  tableau: { bg: '#ffffff', border: '#4E79A7', label: 'Tableau Report' },
-  dtc: { bg: '#c4ceaf', border: '#8a9a70', label: 'DTC (Coming Soon)' },
+  brand: { accent: '#6366f1', label: 'Brand Management' },
+  demand: { accent: '#8b5cf6', label: 'Demand Planning' },
+  supply: { accent: '#d97706', label: 'Supply Chain' },
+  tableau: { accent: '#0891b2', label: 'Tableau Report' },
+  dtc: { accent: '#9ca3af', label: 'DTC (Coming Soon)' },
 };
 
 // Original positions (with 350px x-offset already applied)

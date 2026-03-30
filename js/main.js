@@ -3,16 +3,15 @@ import { nodes, edges, transforms, categories, pillColors } from './config.js';
 // Build Cytoscape elements — data table nodes
 const cyNodes = nodes.map(n => {
   const cat = categories[n.cat];
-  const grainStr = n.grains.length > 0 ? '\n' + n.grains.join(' · ') : '';
+  // Grains as a lighter secondary line
+  const grainStr = n.grains.length > 0 ? '\n' + n.grains.join('  ') : '';
   return {
     data: {
       id: n.id,
       label: n.label.replace(/\n/g, '\n'),
-      grains: grainStr,
       fullLabel: n.label.replace(/\n/g, '\n') + grainStr,
       cat: n.cat,
-      bgColor: cat.bg,
-      borderColor: cat.border,
+      accent: cat.accent,
       dim: n.dim || false,
       stacked: n.stacked || false,
       isTransform: false,
@@ -21,14 +20,13 @@ const cyNodes = nodes.map(n => {
   };
 });
 
-// Build transform nodes — small inline transformation indicators
+// Build transform nodes
 const cyTransforms = transforms.map(t => ({
   data: {
     id: t.id,
     fullLabel: t.label,
     cat: 'transform',
-    bgColor: '#f5f0ff',
-    borderColor: '#9b8ec4',
+    accent: '#9ca3af',
     dim: false,
     stacked: false,
     isTransform: true,
@@ -47,91 +45,111 @@ const cy = cytoscape({
   elements: [...cyNodes, ...cyTransforms, ...cyEdges],
   layout: { name: 'preset' },
   style: [
-    // --- Default node style (data tables) ---
+    // --- Default node style: white card with colored left accent ---
     {
       selector: 'node',
       style: {
         'shape': 'round-rectangle',
         'width': 'label',
         'height': 'label',
-        'padding': '14px',
-        'background-color': 'data(bgColor)',
-        'border-width': 2,
-        'border-color': 'data(borderColor)',
-        'border-opacity': 0.8,
+        'padding': '12px',
+        'background-color': '#ffffff',
+        'border-width': 0,
         'label': 'data(fullLabel)',
         'text-wrap': 'wrap',
         'text-valign': 'center',
         'text-halign': 'center',
-        'font-size': '11px',
-        'font-weight': 600,
-        'font-family': '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-        'color': '#2c2c2a',
-        'text-max-width': '130px',
-        'line-height': 1.4,
-        'corner-radius': 10,
+        'font-size': '10px',
+        'font-weight': 400,
+        'font-family': '-apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", sans-serif',
+        'color': '#374151',
+        'text-max-width': '120px',
+        'line-height': 1.5,
+        'corner-radius': 8,
+        // Soft shadow for card effect
+        'shadow-blur': 12,
+        'shadow-offset-x': 0,
+        'shadow-offset-y': 2,
+        'shadow-color': 'rgba(0, 0, 0, 0.06)',
+        'shadow-opacity': 1,
+        // Colored left accent stripe via border
+        'border-width': 1,
+        'border-color': '#e5e7eb',
+        'border-opacity': 1,
+        // Overlay colored indicator
+        'underlay-color': 'data(accent)',
+        'underlay-padding': 0,
+        'underlay-opacity': 0,
       },
     },
-    // --- Transform nodes (small, diamond-like pills) ---
+    // --- Category accent: thin left-colored border ---
+    // Since Cytoscape can't do left-only borders, use a thin
+    // bottom underlay stripe effect
+    {
+      selector: 'node[!isTransform]',
+      style: {
+        'border-width': '1 1 1 3',
+        'border-color': 'data(accent)',
+        'border-opacity': 0.5,
+      },
+    },
+    // --- Transform nodes ---
     {
       selector: 'node[?isTransform]',
       style: {
-        'shape': 'round-rectangle',
-        'width': 'label',
-        'height': 'label',
-        'padding': '4px 8px',
-        'background-color': '#f5f0ff',
+        'padding': '3px 6px',
+        'background-color': '#fafafa',
         'border-width': 1,
-        'border-color': '#9b8ec4',
+        'border-color': '#d1d5db',
         'border-opacity': 0.6,
+        'border-style': 'dashed',
         'font-size': '7px',
-        'font-weight': 600,
-        'color': '#6b5b95',
-        'text-max-width': '80px',
-        'corner-radius': 8,
-        'opacity': 0.85,
+        'font-weight': 500,
+        'color': '#6b7280',
+        'text-max-width': '70px',
+        'corner-radius': 6,
+        'shadow-blur': 0,
+        'shadow-opacity': 0,
+        'opacity': 0.9,
       },
     },
     // --- Dimmed nodes (DTC) ---
     {
       selector: 'node[?dim]',
       style: {
-        'opacity': 0.35,
+        'opacity': 0.3,
+        'border-opacity': 0.2,
       },
     },
     // --- Stacked nodes ---
     {
       selector: 'node[?stacked]',
       style: {
-        'border-width': 3,
         'shadow-blur': 0,
         'shadow-offset-x': 3,
         'shadow-offset-y': -3,
-        'shadow-color': 'data(borderColor)',
-        'shadow-opacity': 0.3,
+        'shadow-color': 'data(accent)',
+        'shadow-opacity': 0.15,
       },
     },
     // --- Tableau nodes ---
     {
       selector: 'node[cat="tableau"]',
       style: {
-        'background-color': '#ffffff',
-        'border-color': '#4E79A7',
-        'border-width': 1.5,
-        'border-style': 'solid',
+        'border-style': 'dashed',
       },
     },
     // --- Edge style ---
     {
       selector: 'edge',
       style: {
-        'width': 1.5,
-        'line-color': '#c0c4cc',
-        'target-arrow-color': '#c0c4cc',
+        'width': 1,
+        'line-color': '#d1d5db',
+        'target-arrow-color': '#d1d5db',
         'target-arrow-shape': 'triangle',
-        'arrow-scale': 0.8,
+        'arrow-scale': 0.7,
         'curve-style': 'bezier',
-        'opacity': 0.6,
+        'opacity': 0.5,
       },
     },
   ],
@@ -147,26 +165,44 @@ const cy = cytoscape({
 // Fit to view with padding
 cy.fit(undefined, 40);
 
-// Hover effects (only for non-transform nodes)
+// Hover effects
 cy.on('mouseover', 'node[!isTransform]', evt => {
   const node = evt.target;
-  node.style('border-width', 3);
+  const accent = node.data('accent');
+  node.style({
+    'border-opacity': 1,
+    'border-width': '1 1 1 4',
+    'shadow-blur': 16,
+    'shadow-color': accent,
+    'shadow-opacity': 0.12,
+    'shadow-offset-x': 0,
+    'shadow-offset-y': 4,
+  });
   node.connectedEdges().style({
-    'width': 2.5,
-    'line-color': node.data('borderColor'),
-    'target-arrow-color': node.data('borderColor'),
-    'opacity': 1,
+    'width': 1.5,
+    'line-color': accent,
+    'target-arrow-color': accent,
+    'opacity': 0.7,
   });
 });
 
 cy.on('mouseout', 'node[!isTransform]', evt => {
   const node = evt.target;
   const isStacked = node.data('stacked');
-  node.style('border-width', isStacked ? 3 : (node.data('cat') === 'tableau' ? 1.5 : 2));
+  const accent = node.data('accent');
+  node.style({
+    'border-opacity': 0.5,
+    'border-width': '1 1 1 3',
+    'shadow-blur': isStacked ? 0 : 12,
+    'shadow-color': isStacked ? accent : 'rgba(0, 0, 0, 0.06)',
+    'shadow-opacity': isStacked ? 0.15 : 1,
+    'shadow-offset-x': isStacked ? 3 : 0,
+    'shadow-offset-y': isStacked ? -3 : 2,
+  });
   node.connectedEdges().style({
-    'width': 1.5,
-    'line-color': '#c0c4cc',
-    'target-arrow-color': '#c0c4cc',
-    'opacity': 0.6,
+    'width': 1,
+    'line-color': '#d1d5db',
+    'target-arrow-color': '#d1d5db',
+    'opacity': 0.5,
   });
 });
