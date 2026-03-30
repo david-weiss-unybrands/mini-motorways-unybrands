@@ -42,13 +42,16 @@ export default function DataNode({ data }) {
       )}
       <div className="node-name">{label}</div>
       {grains.length > 0 && (
-        <div className="node-grains">
-          {grains.map((g, i) => (
-            <span key={g} className="grain">
-              {i > 0 && <span className="sep"> · </span>}
-              {g}
-            </span>
-          ))}
+        <div className="node-grains-container">
+          <span className="key-icon">🔑</span>
+          <div className="node-grains">
+            {grains.map((g, i) => (
+              <span key={g} className="grain">
+                {i > 0 && <span className="sep"> · </span>}
+                {g}
+              </span>
+            ))}
+          </div>
         </div>
       )}
       {attrs && attrs.length > 0 && (

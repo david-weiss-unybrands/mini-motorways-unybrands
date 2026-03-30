@@ -55,28 +55,46 @@
   letter-spacing: -0.01em;
 }
 
+/* Composite key container */
+.node-grains-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  margin-top: 6px;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  padding: 3px 6px;
+}
+
+.key-icon {
+  font-size: 9px;
+  line-height: 1.5;
+  flex-shrink: 0;
+}
+
 /* Grain tags */
 .node-grains {
-  margin-top: 6px;
   font-size: 10px;
-  font-weight: 400;
+  font-weight: 500;
   font-family: 'SF Mono', 'Menlo', 'Consolas', 'Liberation Mono', monospace;
-  color: #9ca3af;
+  color: #6b7280;
   line-height: 1.5;
   letter-spacing: 0.02em;
 }
 
 .node-grains .sep {
-  color: #d1d5db;
+  color: #9ca3af;
 }
 
-/* Attributes (non-key columns) */
+/* Adjacent columns (non-key) */
 .node-attrs {
-  margin-top: 3px;
+  margin-top: 4px;
+  padding-left: 2px;
   font-size: 10px;
   font-weight: 400;
   font-family: 'SF Mono', 'Menlo', 'Consolas', 'Liberation Mono', monospace;
-  color: #d1d5db;
+  color: #b0b8c4;
   font-style: italic;
   line-height: 1.5;
   letter-spacing: 0.02em;
