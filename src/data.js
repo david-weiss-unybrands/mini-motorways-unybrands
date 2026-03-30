@@ -143,8 +143,10 @@ export const initialEdges = rawEdges.map(([src, dst, style], i) => ({
   type: 'smoothstep',
   ...bestHandles(src, dst),
   ...(style === 'lookup' ? {
+    sourceHandle: 's-top',
+    targetHandle: 't-bottom',
     style: { stroke: '#d97706', strokeWidth: 1.5, strokeDasharray: '4 3' },
-    markerEnd: { type: 'arrowclosed', color: '#d97706', width: 8, height: 8 },
+    markerEnd: undefined,
     data: { lookup: true },
   } : {}),
 }));
