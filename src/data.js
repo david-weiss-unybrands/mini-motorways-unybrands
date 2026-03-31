@@ -1,5 +1,3 @@
-const X_OFF = 350;
-
 // Category accent colors
 export const categories = {
   brand:   { accent: '#6366f1' },
@@ -12,44 +10,44 @@ export const categories = {
 // Raw node definitions
 const rawNodes = [
   // DTC (dimmed)
-  {id:'shopify', label:'Shopify Sales', grains:[], x:385+X_OFF, y:80, cat:'dtc', dim:true},
-  {id:'tiktok', label:'Tiktok', grains:[], x:265+X_OFF, y:75, cat:'dtc', dim:true},
-  {id:'walmart', label:'Walmart', grains:[], x:325+X_OFF, y:10, cat:'dtc', dim:true},
+  {id:'shopify', label:'Shopify Sales', grains:[], x:898, y:251, cat:'dtc', dim:true},
+  {id:'tiktok', label:'Tiktok', grains:[], x:770, y:245, cat:'dtc', dim:true},
+  {id:'walmart', label:'Walmart', grains:[], x:812, y:191, cat:'dtc', dim:true},
   // Demand Planning
-  {id:'forecast', label:'flbr_raw_forecast_** (UB Legacy)', grains:['Date','Snapshot Date','Channel','ASIN','Region'], x:25+X_OFF, y:470, cat:'demand', tag:'Amazon only'},
-  {id:'forecast_rf', label:'flbr_raw_forecast_** (Redfits)', grains:['Date','Snapshot Date','Channel','SKU','Region'], x:40+X_OFF, y:270, cat:'demand', tag:'Amazon only'},
-  {id:'forecast_actuals', label:'forecast_actuals', grains:['Date','ASIN','Country'], x:470+X_OFF, y:450, cat:'demand', stacked:true},
-  {id:'flieber', label:'flbr_monthly_snapshots', grains:['Date','Snapshot Month','Channel','ASIN','Region'], x:100+X_OFF, y:370, cat:'demand', stacked:true},
+  {id:'forecast', label:'flbr_raw_forecast_** (UB Legacy)', grains:['Date','Snapshot Date','Channel','ASIN','Region'], x:375, y:470, cat:'demand', tag:'Amazon only'},
+  {id:'forecast_rf', label:'flbr_raw_forecast_** (Redfits)', grains:['Date','Snapshot Date','Channel','SKU','Region'], x:385, y:242, cat:'demand', tag:'Amazon only'},
+  {id:'forecast_actuals', label:'forecast_actuals', grains:['Date','ASIN','Country'], x:820, y:450, cat:'demand', stacked:true},
+  {id:'flieber', label:'flbr_monthly_snapshots', grains:['Date','Snapshot Month','Channel','ASIN','Region'], x:450, y:370, cat:'demand', stacked:true},
   // Brand Management
-  {id:'orders', label:'fact_order_item', grains:['OrderId','SKU','Date'], attrs:['ASIN','Country'], x:760+X_OFF, y:695, cat:'brand', tag:'Amazon only'},
-  {id:'returns', label:'fact_returns', grains:['OrderId','SKU','Date'], attrs:['ASIN','Country'], x:935+X_OFF, y:635, cat:'brand', tag:'Amazon only'},
-  {id:'sales', label:'ft_usd_sales', grains:['Date','SKU','Country'], attrs:['ASIN'], x:635+X_OFF, y:550, cat:'brand', stacked:true, tag:'Amazon only'},
-  {id:'rgm', label:'report_global_metrics', grains:['Date','ASIN','Country'], x:820+X_OFF, y:270, cat:'brand', stacked:true, tag:'Amazon only'},
-  {id:'traffic', label:'SalesTrafficByChildAsin', grains:['ASIN','Country','Date'], x:995+X_OFF, y:355, cat:'brand', tag:'Amazon only'},
-  {id:'bsr', label:'keepa_bsr_uny', grains:['ASIN','Country','BSR Level','Date'], x:995+X_OFF, y:180, cat:'brand', tag:'Amazon only'},
-  {id:'ads', label:'fact_ads_data', grains:['Country','SKU','Adtype','Date'], attrs:['ASIN'], x:895+X_OFF, y:510, cat:'brand', tag:'Amazon only'},
-  {id:'bm_primary', label:'BM Primary Report', grains:['Date','ASIN','Country'], x:820+X_OFF, y:15, cat:'tableau'},
+  {id:'orders', label:'fact_order_item', grains:['OrderId','SKU','Date'], attrs:['ASIN','Country'], x:1118, y:707, cat:'brand', tag:'Amazon only'},
+  {id:'returns', label:'fact_returns', grains:['OrderId','SKU','Date'], attrs:['ASIN','Country'], x:1285, y:635, cat:'brand', tag:'Amazon only'},
+  {id:'sales', label:'ft_usd_sales', grains:['Date','SKU','Country'], attrs:['ASIN'], x:945, y:593, cat:'brand', stacked:true, tag:'Amazon only'},
+  {id:'rgm', label:'report_global_metrics', grains:['Date','ASIN','Country'], x:1141, y:298, cat:'brand', stacked:true, tag:'Amazon only'},
+  {id:'traffic', label:'SalesTrafficByChildAsin', grains:['ASIN','Country','Date'], x:1302, y:392, cat:'brand', tag:'Amazon only'},
+  {id:'bsr', label:'keepa_bsr_uny', grains:['ASIN','Country','BSR Level','Date'], x:1342, y:247, cat:'brand', tag:'Amazon only'},
+  {id:'ads', label:'fact_ads_data', grains:['Country','SKU','Adtype','Date'], attrs:['ASIN'], x:1245, y:510, cat:'brand', tag:'Amazon only'},
+  {id:'bm_primary', label:'BM Primary Report', grains:['Date','ASIN','Country'], x:1171, y:171, cat:'tableau'},
   // Supply Chain
-  {id:'pov', label:'po_visibility_3pls (UB Legacy)', grains:['USIN','SKU','Region','ASIN'], x:-20+X_OFF, y:615, cat:'supply', stacked:true},
-  {id:'inventory', label:'consolidated_inventory', grains:['Location Code','SKU'], attrs:['USIN','ASIN'], x:-155+X_OFF, y:780, cat:'supply'},
-  {id:'erp', label:'erp_mapping (Netsuite)', grains:['SKU','FNSKU','Country','ASIN','MPN','Channel','USIN','Date Created'], x:120+X_OFF, y:775, cat:'supply'},
-  {id:'erp_item_master', label:'erp_item_master (Netsuite)', grains:['`Vendor Country`','SKU','USIN','Vendor'], attrs:['UPC'], x:120+X_OFF, y:890, cat:'supply'},
-  {id:'inventory_tradepeg', label:'consolidated_inventory_rf', grains:['SKU','Location Code'], attrs:['ASIN'], x:-130+X_OFF, y:160, cat:'supply'},
-  {id:'po_visibility_rf', label:'po_visibility_rf', grains:['SKU','Region'], attrs:['ASIN'], x:-130+X_OFF, y:285, cat:'supply'},
-  {id:'days_of_supply', label:'vw_scm_days_of_supply', grains:['USIN','Region'], attrs:['ASIN'], x:-150+X_OFF, y:460, cat:'supply', stacked:true},
-  {id:'inventory_detail', label:'Inventory Detail', grains:['USIN','Region'], attrs:['ASIN'], x:-300+X_OFF, y:460, cat:'tableau'},
+  {id:'pov', label:'po_visibility_3pls (UB Legacy)', grains:['USIN','SKU','Region','ASIN'], x:165, y:666, cat:'supply', stacked:true},
+  {id:'inventory', label:'consolidated_inventory', grains:['Location Code','SKU'], attrs:['USIN','ASIN'], x:168, y:763, cat:'supply'},
+  {id:'erp', label:'erp_mapping (Netsuite)', grains:['SKU','FNSKU','Country','ASIN','MPN','Channel','USIN','Date Created'], x:473, y:741, cat:'supply'},
+  {id:'erp_item_master', label:'erp_item_master (Netsuite)', grains:['`Vendor Country`','SKU','USIN','Vendor'], attrs:['UPC'], x:476, y:850, cat:'supply'},
+  {id:'inventory_tradepeg', label:'consolidated_inventory_rf', grains:['SKU','Location Code'], attrs:['ASIN'], x:211, y:190, cat:'supply'},
+  {id:'po_visibility_rf', label:'po_visibility_rf', grains:['SKU','Region'], attrs:['ASIN'], x:217, y:294, cat:'supply'},
+  {id:'days_of_supply', label:'vw_scm_days_of_supply', grains:['USIN','Region'], attrs:['ASIN'], x:116, y:465, cat:'supply', stacked:true},
+  {id:'inventory_detail', label:'Inventory Detail', grains:['USIN','Region'], attrs:['ASIN'], x:-20, y:462, cat:'tableau'},
   // Tableau
-  {id:'fcst_vis', label:'Forecast Visibility', grains:['Snapshot Month','ASIN','Country'], x:310+X_OFF, y:355, cat:'tableau'},
+  {id:'fcst_vis', label:'Forecast Visibility', grains:['Snapshot Month','ASIN','Country'], x:660, y:355, cat:'tableau'},
 ];
 
 // Transform nodes (inline on edges)
 const rawTransforms = [
   {id:'t_f_fa',    label:'Region → Country',              x:564, y:462},
   {id:'t_rf_fa',   label:'MSKU → ASIN, Region → Country', x:560, y:340},
-  {id:'t_s_pov',   label:'ASIN→USIN, Country→Region', x:828, y:566},
-  {id:'t_s_fa',    label:'AGG drop MSKU',              x:915, y:507},
+  {id:'t_s_pov',   label:'ASIN→USIN, Country→Region', x:825, y:556},
+  {id:'t_s_fa',    label:'AGG drop MSKU',              x:940, y:528},
   {id:'t_s_rgm',   label:'AGG drop MSKU',              x:1064,y:431},
-  {id:'t_f_pov',   label:'ASIN→USIN, Country→Region',  x:352, y:542},
+  {id:'t_f_pov',   label:'ASIN→USIN, Country→Region',  x:554, y:689},
 ];
 
 // Scale positions to give cards breathing room
