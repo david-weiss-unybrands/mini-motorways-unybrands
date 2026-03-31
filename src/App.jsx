@@ -101,6 +101,13 @@ export default function App() {
     });
   }, [edges, transformPathNodeIds]);
 
+  const copyLayout = useCallback(() => {
+    const positions = {};
+    nodes.forEach(n => { positions[n.id] = { x: Math.round(n.position.x), y: Math.round(n.position.y) }; });
+    navigator.clipboard.writeText(JSON.stringify(positions, null, 2));
+    alert('Layout copied to clipboard');
+  }, [nodes]);
+
   return (
     <div style={{ width: '100vw', height: '100vh', background: '#f4f5f7' }}>
       <div className="grain-filter-bar">
@@ -125,6 +132,10 @@ export default function App() {
           onClick={() => setShowTransforms(v => !v)}
         >
           Show Transforms
+        </button>
+        <span className="filter-divider" />
+        <button className="grain-pill" onClick={copyLayout}>
+          Copy Layout
         </button>
       </div>
       <ReactFlow
